@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pac_Man_DesignPatterns.GhostFactory.GhostFactory" Collapsed="true">
+    <Position X="15.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GhostFactory\GhostFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.GhostFactory.CyanGhost" Collapsed="true">
+    <Position X="11.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GhostFactory\CyanGhost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.GhostFactory.RedGhost" Collapsed="true">
+    <Position X="13.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GhostFactory\RedGhost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.GhostFactory.OrangeGhost" Collapsed="true">
+    <Position X="15.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GhostFactory\OrangeGhost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.GhostFactory.PinkGhost" Collapsed="true">
+    <Position X="17.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GhostFactory\PinkGhost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.Entity" Collapsed="true">
+    <Position X="10.25" Y="13.25" Width="1.5" />
+    <AssociationLine Name="Agregation" Type="Pac_Man_DesignPatterns.Game.Game" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="13.25" />
+        <Point X="11" Y="9.813" />
+        <Point X="9.083" Y="9.813" Type="JumpStart" />
+        <Point X="8.917" Y="9.813" Type="JumpEnd" />
+        <Point X="6.646" Y="9.813" Type="JumpStart" />
+        <Point X="6.479" Y="9.813" Type="JumpEnd" />
+        <Point X="6.125" Y="9.813" />
+        <Point X="6.125" Y="8.941" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.833" Y="1.185" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAADAAAgAAAAAAAAAAAAAgAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Entities\Entity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Agregation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Ghost" Collapsed="true">
+    <Position X="15.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\Ghosts\Ghost.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IGhostStrategy" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.MovableEntity" Collapsed="true">
+    <Position X="12.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\MovableEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.TileEntity.TileEntity" Collapsed="true">
+    <Position X="12.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TileEntity\TileEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Cyan" Collapsed="true">
+    <Position X="17.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\Ghosts\Cyan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Orange" Collapsed="true">
+    <Position X="17.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\Ghosts\Orange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Pink" Collapsed="true">
+    <Position X="17.25" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\Ghosts\Pink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Red" Collapsed="true">
+    <Position X="17.25" Y="15.25" Width="1.5" />
+    <InheritanceLine Type="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Ghost" FixedToPoint="true">
+      <Path>
+        <Point X="16" Y="13.941" />
+        <Point X="16" Y="15.596" />
+        <Point X="17.25" Y="15.596" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\Ghosts\Red.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.PacMan" Collapsed="true">
+    <Position X="15.25" Y="16.25" Width="1.5" />
+    <AssociationLine Name="Implementation" Type="Pac_Man_DesignPatterns.Utils.IObservable">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.329" Y="3.212" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAoAAAAAAAAAAQACAAAAIABIAAAAAABAAAA=</HashCode>
+      <FileName>Entities\MovableEntity\PacMan.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Implementation" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.TileEntity.Cookie" Collapsed="true">
+    <Position X="16.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TileEntity\Cookie.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.TileEntity.PowerCookie" Collapsed="true">
+    <Position X="16.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TileEntity\PowerCookie.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.TileEntity.Wall" Collapsed="true">
+    <Position X="14.25" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TileEntity\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Game.GameManager" Collapsed="true">
+    <Position X="27.5" Y="5.75" Width="1.5" />
+    <AssociationLine Name="Implementation" Type="Pac_Man_DesignPatterns.Utils.IObserver">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.75" Y="1.681" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQRABAAAEAJAggAAAAAAAQAAAAgAAIAAAAAQAAAAAAA=</HashCode>
+      <FileName>Game\GameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LevelDirector" />
+      <Property Name="ILevelBuilder" />
+      <Property Name="IMazeProduct" />
+      <Property Name="Game" />
+      <Property Name="UIManager" />
+      <Property Name="KeyHandler" />
+      <Property Name="Implementation" />
+      <Property Name="MenuManager" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Game.UIManager" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Implementation" Type="Pac_Man_DesignPatterns.Utils.IObserver">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.543" Y="4.592" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABAAAAAAAAAAAgQAAAAAEACAAAAAAAAAAABA=</HashCode>
+      <FileName>Game\UIManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Implementation" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Game.KeyHandler" Collapsed="true">
+    <Position X="30.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\KeyHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Game.Game" Collapsed="true">
+    <Position X="5.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAIAIAwAAAAAAAAAAAAAAAAAAAAAAAQAAQAY=</HashCode>
+      <FileName>Game\Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GhostFactory1" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Entities.TileEntity.Food" Collapsed="true">
+    <Position X="14.25" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TileEntity\Food.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Level.LevelBuilder" Collapsed="true">
+    <Position X="38" Y="2.75" Width="1.5" />
+    <AssociationLine Name="Realization" Type="Pac_Man_DesignPatterns.Level.ILevelBuilder">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.329" Y="0.188" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgEAACAAAAIAAQAAAAAAAAAAAAAAACAAAEAA=</HashCode>
+      <FileName>Level\LevelBuilder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Realization" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.148" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Level.LevelDirector" Collapsed="true">
+    <Position X="29.5" Y="2.75" Width="1.5" />
+    <AssociationLine Name="Composition" Type="Pac_Man_DesignPatterns.Level.IMazeProduct">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.115" Y="0.62" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACCAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Level\LevelDirector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Composition" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Menu.MenuManager">
+    <Position X="22" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAIAEAEAAAAAAAAAAACA=</HashCode>
+      <FileName>Menu\MenuManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Menu.AMenuItem" Collapsed="true">
+    <Position X="26" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAEAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Menu\AMenuItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MenuManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Menu.PlayButton" Collapsed="true">
+    <Position X="26" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Menu\PlayButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Menu.QuitButton" Collapsed="true">
+    <Position X="28.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Menu\QuitButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Strategy.CyanGhostStrategy" Collapsed="true">
+    <Position X="23.25" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Strategy\CyanGhostStrategy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IGhostStrategy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Strategy.PinkGhostStrategy" Collapsed="true">
+    <Position X="23.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Strategy\PinkGhostStrategy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IGhostStrategy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Strategy.OrangeGhostStrategy" Collapsed="true">
+    <Position X="23.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Strategy\OrangeGhostStrategy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IGhostStrategy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pac_Man_DesignPatterns.Strategy.RedGhostStrategy" Collapsed="true">
+    <Position X="23.25" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Strategy\RedGhostStrategy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IGhostStrategy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Pac_Man_DesignPatterns.Level.IMazeProduct" Collapsed="true">
+    <Position X="29.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Level\IMazeProduct.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Pac_Man_DesignPatterns.Level.ILevelBuilder" Collapsed="true">
+    <Position X="35" Y="2.75" Width="1.5" />
+    <AssociationLine Name="Agregation" Type="Pac_Man_DesignPatterns.Level.LevelDirector">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="1.586" Y="0.188" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAACAAAAIAAQAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Level\ILevelBuilder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Agregation" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="Pac_Man_DesignPatterns.Utils.IObserver" Collapsed="true">
+    <Position X="13.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\IObserver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Pac_Man_DesignPatterns.Utils.IObservable" Collapsed="true">
+    <Position X="8.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAIABAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\IObservable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Pac_Man_DesignPatterns.Strategy.IGhostStrategy" Collapsed="true">
+    <Position X="20.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Strategy\IGhostStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Pac_Man_DesignPatterns.Command.ICommand" Collapsed="true">
+    <Position X="19.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Command\ICommand.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
