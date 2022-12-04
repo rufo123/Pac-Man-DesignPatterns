@@ -13,6 +13,42 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin assets/entitites/cookie.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:assets/entitites/cookie.png
+
+#begin assets/entitites/ghost_dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:assets/entitites/ghost_dead.png
+
+#begin assets/entitites/ghost_frightened.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:assets/entitites/ghost_frightened.png
+
 #begin assets/entitites/ghost_house.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:assets/entitites/pacman/pacman.png
 
+#begin assets/entitites/power_cookie.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:assets/entitites/power_cookie.png
+
 #begin assets/entitites/wall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,6 +108,20 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:assets/entitites/wall.png
+
+#begin assets/fonts/font_bigger.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:assets/fonts/font_bigger.spritefont
+
+#begin assets/fonts/font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:assets/fonts/font.spritefont
 
 #begin assets/levels/level1.txt
 /copy:assets/levels/level1.txt

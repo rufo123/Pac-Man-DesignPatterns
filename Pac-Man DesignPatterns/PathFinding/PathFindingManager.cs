@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pac_Man_DesignPatterns.Entities;
 
 namespace Pac_Man_DesignPatterns.PathFinding
 {
@@ -14,17 +15,17 @@ namespace Pac_Man_DesignPatterns.PathFinding
     public class PathFindingManager
     {
 
-        private int aMazeWidth;
+        private readonly int aMazeWidth;
 
-        private int aMazeHeight;
+        private readonly int aMazeHeight;
 
-        private int[,] aMazeGraph;
+        private readonly int[,] aMazeGraph;
 
-        private int aTilesScale;
+        private readonly int aTilesScale;
 
 
 
-        public PathFindingManager(int parMazeWidth, int parMazeHeight, TileEntity[] parListWallEntities, int parTilesScale)
+        public PathFindingManager(int parMazeWidth, int parMazeHeight, Entity[] parListWallEntities, int parTilesScale)
         {
             this.aMazeWidth = parMazeWidth;
             this.aMazeHeight = parMazeHeight;
@@ -51,10 +52,19 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
         public int[] GetShortestPath(Vector2 parSource, IPathFindingAlgorithm pathFindingAlgorithm)
         {
+
             int tmpConvX = ((int)parSource.X / aTilesScale) % aMazeWidth;
             int tmpConvY = ((int)parSource.Y / aTilesScale) % aMazeHeight;
 
-            return pathFindingAlgorithm.FindShortestPath(aMazeGraph, (tmpConvY) + (tmpConvX * aMazeHeight));
+            if (tmpConvX > 0 && tmpConvX < aMazeWidth)
+            {
+                if (tmpConvY > 0 && tmpConvY < aMazeHeight)
+                {
+                    return pathFindingAlgorithm.FindShortestPath(aMazeGraph, (tmpConvY) + (tmpConvX * aMazeHeight));
+                }
+            }
+
+            return null;
         }
 
         public int[] ConstructPath(Vector2 parTarget, int[] parPath)
@@ -92,8 +102,21 @@ namespace Pac_Man_DesignPatterns.PathFinding
             Debug.WriteLine(parTarget);
 
             return new Vector2(parPositionX, parPositionY);
+        }
 
-          
+        public Vector2[] ConvertTargetIdsToVectorArray(int[] parTarget)
+        {
+            Vector2[] tmpVectorArray = new Vector2[parTarget.Length];
+
+            for (int i = 0; i < parTarget.Length; i++)
+            {
+                int parPositionX = ((parTarget[i] / aMazeHeight)) * aTilesScale;
+                int parPositionY = (parTarget[i] % aMazeHeight) * aTilesScale;
+
+                tmpVectorArray[i] = new Vector2(parPositionX, parPositionY);
+            }
+
+            return tmpVectorArray;
 
         }
 

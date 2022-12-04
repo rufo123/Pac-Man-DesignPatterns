@@ -10,13 +10,13 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
 {
     public abstract class Food : TileEntity, ICommand
     {
-        protected Food(Texture2D parTexture2D,int parPositionX, int parPositionY, int parSize) : base(parTexture2D ,parPositionX, parPositionY, parSize)
+        protected Food(string parTexturePath, int parPositionX, int parPositionY, int parSize) : base(parTexturePath, parPositionX, parPositionY, parSize)
         {
         }
 
         public virtual void Execute()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

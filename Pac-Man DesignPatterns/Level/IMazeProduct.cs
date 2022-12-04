@@ -1,36 +1,42 @@
-﻿using Pac_Man_DesignPatterns.Entities.TileEntity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Pac_Man_DesignPatterns.Entities;
 
 namespace Pac_Man_DesignPatterns.Level
 {
     public interface IMazeProduct
     {
-        public void AddWalls(TileEntity parWalls);
+        public void AddWalls(Entity parWalls);
 
-        public void AddFood(TileEntity parFood);
+        public void AddFood(Entity parFood);
 
-        public void AddOtherObjects(TileEntity parObjects);
+        public void AddOtherObjects(Entity parObjects);
 
-        public void AddGhostHouse(TileEntity parGhostHouse);
+        public void AddGhostHouse(Entity parGhostHouse);
 
-        public void AddGhostScatterPoint(TileEntity parGhostScatterPoints);
+        public void AddGhostScatterPoint(Entity parGhostScatterPoints);
 
-        public TileEntity[] GetWalls();
-        public TileEntity[] GetFood();
+        public void AddEmptySpace(Vector2 parVectorEmptySpace);
 
-        public TileEntity[] GetGhostHouse();
 
-        public TileEntity[] GetOtherObjects();
+        public Entity[] GetWalls();
+        public Entity[] GetFood();
 
-        public TileEntity[] GetGhostScatterPoints();
+        public Entity[] GetGhostHouse();
 
-        public TileEntity[] GetFinalProduct();
+        public Entity[] GetOtherObjects();
 
-        public TileEntity[] GetAllEntities();
+        public Entity[] GetGhostScatterPoints();
+
+        public Entity[] GetFinalProduct();
+
+        public Entity[] GetAllEntities();
+
+        public Vector2[] GetEmptySpaces();
 
 
 

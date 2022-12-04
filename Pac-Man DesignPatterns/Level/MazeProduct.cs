@@ -1,101 +1,118 @@
-﻿using Pac_Man_DesignPatterns.Entities.TileEntity;
-using Pac_Man_DesignPatterns.Utils;
+﻿using Pac_Man_DesignPatterns.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Pac_Man_DesignPatterns.Entities;
 
 namespace Pac_Man_DesignPatterns.Level
 {
-    internal class MazeProduct : IMazeProduct
+    public class MazeProduct : IMazeProduct
     {
-        private List<TileEntity> aFood;
+        private readonly List<Entity> aFood;
 
-        private List<TileEntity> aWalls;
+        private readonly List<Entity> aWalls;
 
-        private List<TileEntity> aObjects;
+        private readonly List<Entity> aObjects;
 
-        private List<TileEntity> aGhostScatterPoints;
+        private readonly List<Entity> aGhostScatterPoints;
 
-        private List<TileEntity> aGhostHouse;
+        private readonly List<Entity> aGhostHouse;
 
-        private List<TileEntity> aAllEntities;
+        private readonly List<Entity> aAllEntities;
+
+        private readonly List<Vector2> aEmptySpaces;
 
 
         public MazeProduct()
         {
-            aFood = new List<TileEntity>();
-            aWalls = new List<TileEntity>();
-            aObjects = new List<TileEntity>();
-            aGhostScatterPoints = new List<TileEntity>();
-            aGhostHouse = new List<TileEntity>();
-            aAllEntities = new List<TileEntity>();
+            aFood = new List<Entity>();
+            aWalls = new List<Entity>();
+            aObjects = new List<Entity>();
+            aGhostScatterPoints = new List<Entity>();
+            aGhostHouse = new List<Entity>();
+            aAllEntities = new List<Entity>();
+            aEmptySpaces = new List<Vector2>();
+
+
         }
 
-        public void AddFood(TileEntity parFood)
+        public void AddFood(Entity parFood)
         {
             aFood.Add(parFood);
             aAllEntities.Add(parFood);
         }
 
-        public void AddOtherObjects(TileEntity parObjects)
+        public void AddOtherObjects(Entity parObjects)
         {
             aObjects.Add(parObjects);
             aAllEntities.Add(parObjects);
         }
 
-        public void AddGhostHouse(TileEntity parGhostHouse)
+        public void AddGhostHouse(Entity parGhostHouse)
         {
             aGhostHouse.Add(parGhostHouse);
             aAllEntities.Add(parGhostHouse);
         }
 
-        public void AddGhostScatterPoint(TileEntity parGhostScatterPoints)
+        public void AddGhostScatterPoint(Entity parGhostScatterPoints)
         {
             aGhostScatterPoints.Add(parGhostScatterPoints);
             aAllEntities.Add(parGhostScatterPoints);
         }
 
-        public void AddWalls(TileEntity parWalls)
+
+        public void AddWalls(Entity parWalls)
         {
             aWalls.Add(parWalls);
             aAllEntities.Add(parWalls);
         }
 
-        public TileEntity[] GetGhostScatterPoints()
+        public void AddEmptySpace(Vector2 parVectorEmptySpace)
+        {
+            aEmptySpaces.Add(parVectorEmptySpace);
+        }
+
+        public Entity[] GetGhostScatterPoints()
         {
             return aGhostScatterPoints.ToArray();
         }
 
-        public TileEntity[] GetFinalProduct()
+        public Entity[] GetFinalProduct()
         {
             throw new NotImplementedException();
         }
 
-        public TileEntity[] GetFood()
+        public Entity[] GetFood()
         {
             return aFood.ToArray();
         }
 
-        public TileEntity[] GetGhostHouse()
+        public Entity[] GetGhostHouse()
         {
             return aGhostHouse.ToArray();
         }
 
-        public TileEntity[] GetOtherObjects()
+        public Entity[] GetOtherObjects()
         {
             return aObjects.ToArray();
         }
 
-        public TileEntity[] GetWalls()
+        public Entity[] GetWalls()
         {
             return aWalls.ToArray();
         }
 
-        public TileEntity[] GetAllEntities()
+        public Entity[] GetAllEntities()
         {
             return aAllEntities.ToArray();
+        }
+
+        public Vector2[] GetEmptySpaces()
+        {
+            return aEmptySpaces.ToArray();
         }
 
     }

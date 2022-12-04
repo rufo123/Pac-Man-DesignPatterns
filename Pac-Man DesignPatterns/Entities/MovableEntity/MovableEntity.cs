@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.State;
 using Pac_Man_DesignPatterns.Utils;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using Pac_Man_DesignPatterns.State.MovableEntity;
 
 namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 {
@@ -16,16 +19,43 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
         private Direction aEnqueuedDirection;
 
-        private bool aControlledByUser;
+        private readonly bool aControlledByUser;
 
-        private int aPixelsToMove;
+        private readonly int aPixelsToMove;
 
         private bool aIsBlocked;
 
-        protected MovableEntity(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, bool parControlledByUser) : base(parTexture, parPositionX, parPositionY, parSize)
+        private MovableStateAbs aMovableState;
+
+        private MovableStateAbs aMovableStateUp;
+
+        private MovableStateAbs aMovableStateDown;
+
+        private MovableStateAbs aMovableStateRight;
+
+        private MovableStateAbs aMovableStateLeft;
+
+        private readonly float aSpeed;
+        private readonly float aDefaultSpeed;
+
+
+        protected MovableEntity(string parTexturePath, int parPositionX, int parPositionY, int parSize, bool parControlledByUser) : base(parTexturePath, parPositionX, parPositionY, parSize)
         {
             this.aControlledByUser = parControlledByUser;
             aPixelsToMove = 64;
+            aSpeed =  1;
+            aDefaultSpeed = aSpeed;
+            InitStates();
+        }
+
+        private void InitStates()
+        {
+            aMovableStateUp = new MovableUp(this);
+            aMovableStateRight = new MovableRight(this);
+            aMovableStateDown = new MovableDown(this);
+            aMovableStateLeft = new MovableLeft(this);
+
+            aMovableState = aMovableStateRight;
         }
 
         public bool IsBlocked
@@ -33,6 +63,8 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             get => aIsBlocked;
             set => aIsBlocked = value;
         }
+
+        public bool ControlledByUser => aControlledByUser;
 
         public Direction Direction
         {
@@ -46,22 +78,18 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
         public void ChangeDirection(Direction parDirection)
         {
-
             if (parDirection != Direction.NOTHING)
             {
-
                 aEnqueuedDirection = parDirection;
-
             }
-
         }
 
-        private float ModPositionAxis(float parPositionAxis)
+        public float ModPositionAxis(float parPositionAxis)
         {
             return parPositionAxis - parPositionAxis % Size;
         }
 
-        private void AdjustPositionX(bool parToUpperLimit)
+        public void AdjustPositionX(bool parToUpperLimit)
         {
             if (parToUpperLimit && Size - (Position.X % Size) < 0.01)
             {
@@ -73,7 +101,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             }
         }
 
-        private void AdjustPositionY(bool parToUpperLimit)
+        public void AdjustPositionY(bool parToUpperLimit)
         {
             if (parToUpperLimit && Size - (Position.Y % Size) < 0.01)
             {
@@ -92,32 +120,12 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
             if (!aIsBlocked)
             {
+                
 
-                float deltaTime = (float)parGameTime.ElapsedGameTime.TotalSeconds;
-
-                switch (aDirection)
+                if (aDirection != Direction.NOTHING)
                 {
-                    case Direction.NOTHING:
-
-                        break;
-                    case Direction.UP:
-                        Position = new Vector2(ModPositionAxis(Position.X), Position.Y - aPixelsToMove * deltaTime);
-                        AdjustPositionY(false);
-                        break;
-                    case Direction.DOWN:
-                        Position = new Vector2(ModPositionAxis(Position.X), Position.Y + aPixelsToMove * deltaTime);
-                        AdjustPositionY(true);
-                        break;
-                    case Direction.LEFT:
-                        Position = new Vector2(Position.X - aPixelsToMove * deltaTime, ModPositionAxis(Position.Y));
-                        AdjustPositionX(false);
-                        break;
-                    case Direction.RIGHT:
-                        Position = new Vector2(Position.X + aPixelsToMove * deltaTime, ModPositionAxis(Position.Y));
-                        AdjustPositionX(true);
-                        break;
+                    aMovableState.Move(aDirection, parGameTime, aPixelsToMove);
                 }
-
             }
 
             if (aIsBlocked)
@@ -170,9 +178,6 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
                 }
 
-                var test = 64.354 % Size;
-
-
             }
         }
 
@@ -181,10 +186,9 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
             if (aEnqueuedDirection != Direction.NOTHING)
             {
-                aDirection = aEnqueuedDirection;
+                aMovableState.ChangeState(aEnqueuedDirection);
             }
 
-            aEnqueuedDirection = Direction.NOTHING;
         }
 
         public Rectangle PredictRectangleNextPos(GameTime parGameTime, Direction parDirection)
@@ -194,13 +198,13 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             switch (parDirection)
             {
                 case Direction.UP:
-                    return new Rectangle((int)Position.X, (int)Position.Y - (int)Math.Round(aPixelsToMove * deltaTime), Size, Size);
+                    return new Rectangle((int)Position.X, (int)Position.Y - (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), Size, Size);
                 case Direction.DOWN:
-                    return new Rectangle((int)Position.X, (int)Position.Y + (int)Math.Round(aPixelsToMove * deltaTime), Size, Size);
+                    return new Rectangle((int)Position.X, (int)Position.Y + (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), Size, Size);
                 case Direction.LEFT:
-                    return new Rectangle((int)Position.X - (int)Math.Round(aPixelsToMove * deltaTime), (int)Position.Y, Size, Size);
+                    return new Rectangle((int)Position.X - (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), (int)Position.Y, Size, Size);
                 case Direction.RIGHT:
-                    return new Rectangle((int)Position.X + (int)Math.Round(aPixelsToMove * deltaTime), (int)Position.Y, Size, Size);
+                    return new Rectangle((int)Position.X + (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), (int)Position.Y, Size, Size);
                 default:
                     return GetRectangleHitBox();
 
@@ -208,7 +212,47 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
         }
 
+        public void ChangeMovableState(Direction parDirection, bool parCanRotate180 = true)
+        {
+            switch (parDirection)
+            {
+                case Direction.UP:
+                    aMovableState = aMovableStateUp;
+                    break;
+                case Direction.DOWN:
+                    aMovableState = aMovableStateDown;
+                    break;
+                case Direction.LEFT:
+                    aMovableState = aMovableStateLeft;
+                    break;
+                case Direction.RIGHT:
+                    aMovableState = aMovableStateRight;
+                    break;
+            }
 
+            aDirection = parDirection;
+            aEnqueuedDirection = Direction.NOTHING;
+        }
+
+        public override float GetRotation()
+        {
+            return aMovableState.GetRotation();
+        }
+
+        public override SpriteEffects GetSpriteEffects()
+        {
+            return aMovableState.GetSpriteEffects();
+        }
+
+        public virtual float GetSpeed()
+        {
+            return aSpeed;
+        }
+
+        public float GetDefaultSpeed()
+        {
+            return aDefaultSpeed;
+        }
 
     }
 }

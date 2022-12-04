@@ -11,17 +11,17 @@ namespace Pac_Man_DesignPatterns.Utils
     public class Utilities
     {
 
-        private Vector2[] aArrayEmptySpaces;
+        private readonly Vector2[] aArrayEmptySpaces;
 
         private Vector2[] aArrayTiles;
 
         private Vector2[] aArrayMovableEntities;
 
-        private Random aRandomTilesGenerator;
+        private readonly Random aRandomTilesGenerator;
 
-        private Random aRandomAdjancetGenerator;
+        private readonly Random aRandomAdjancetGenerator;
 
-        private Random aRandomSeedGenerator;
+        private readonly Random aRandomSeedGenerator;
 
         public Utilities(Vector2[] parArrayEmptySpaces, Vector2[] parArrayTiles, Vector2[] parArrayMovableEntities)
         {

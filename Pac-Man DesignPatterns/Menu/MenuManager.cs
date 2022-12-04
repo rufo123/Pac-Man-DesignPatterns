@@ -9,7 +9,9 @@ namespace Pac_Man_DesignPatterns.Menu
     public class MenuManager
     {
 
+#pragma warning disable CS0414
         private bool aVisible;
+#pragma warning restore CS0414
         private AMenuItem[] aArrayMenuItems;
 
         public MenuManager()

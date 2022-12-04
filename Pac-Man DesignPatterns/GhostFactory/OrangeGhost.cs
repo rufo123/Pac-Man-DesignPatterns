@@ -14,9 +14,12 @@ namespace Pac_Man_DesignPatterns.GhostFactory
 {
     public class OrangeGhost : GhostFactory
     {
-        public override Orange CreateGhost(Texture2D parTexture, int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector)
+        public override Orange CreateGhost(string parTexturePath, int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath)
         {
-            return new Orange(parTexture, parXPosition, parYPosition, parScale, null, Vector2.Zero, new OrangeGhostStrategy(), parCollisionDetector);
+
+            Orange tmpGhost = new Orange(parTexturePath, parXPosition, parYPosition, parScale, null, parGhostHousePos, new OrangeGhostStrategy(), parCollisionDetector, parFrightenedTexturePath, parDeadTexturePath);
+            ((OrangeGhostStrategy)tmpGhost.GhostStrategy).SetGhostToStrategy(tmpGhost);
+            return tmpGhost;
         }
     }
 }

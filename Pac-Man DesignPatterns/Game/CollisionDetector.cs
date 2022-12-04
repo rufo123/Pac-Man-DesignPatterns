@@ -6,16 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Pac_Man_DesignPatterns.Game
 {
     public class CollisionDetector
     {
-        private TileEntity[] aGameEntitiesArray;
+        private readonly Entity[] aGameEntitiesArray;
 
-        public CollisionDetector(TileEntity[] parGameEntitiesArray)
+        public CollisionDetector(Entity[] parGameEntitiesArray)
         {
             this.aGameEntitiesArray = parGameEntitiesArray;
+        }
+
+        public CollisionDetector(List<Entity> parGameEntitiesList)
+        {
+            this.aGameEntitiesArray = parGameEntitiesList.ToArray();
         }
 
         public bool DetectCollision(Entity parEntity)
@@ -30,8 +36,11 @@ namespace Pac_Man_DesignPatterns.Game
             return false;
         }
 
-        public bool DetectCollision(Rectangle parRectangle, out Entity parOutCollidedWithEntity)
+        public bool DetectCollision(Rectangle parRectangle, out Entity[] parOutCollidedWithEntity)
         {
+            bool tmpCollidedWithEntity = false;
+            parOutCollidedWithEntity = null;
+            List<Entity> tmpListCollidedWithEntities = new List<Entity>();
 
             int tmpIndex = 0;
             foreach (var itemEntity in this.aGameEntitiesArray)
@@ -39,12 +48,19 @@ namespace Pac_Man_DesignPatterns.Game
                 tmpIndex++;
                 if (itemEntity.GetRectangleHitBox().Intersects(parRectangle))
                 {
-                    parOutCollidedWithEntity = itemEntity;
-                    return true;
+                    tmpCollidedWithEntity = true;
+                    tmpListCollidedWithEntities.Add(itemEntity);
+
                 }
             }
 
-            parOutCollidedWithEntity = null;
+            if (tmpCollidedWithEntity)
+            {
+                parOutCollidedWithEntity = tmpListCollidedWithEntities.ToArray();
+                return true;
+            }
+
+           
             return false;
         }
     }

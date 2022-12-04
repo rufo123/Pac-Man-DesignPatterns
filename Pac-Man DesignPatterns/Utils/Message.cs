@@ -9,22 +9,22 @@ namespace Pac_Man_DesignPatterns.Utils
 {
     public class Message
     {
-        private int aId;
+        private readonly MessageCodes aMessageCode;
 
-        public int Id
+        public MessageCodes MessageCode
         {
-            get => aId;
+            get => aMessageCode;
         }
         
-        private ICommand aCommand;
+        private readonly ICommand aCommand;
 
         public ICommand ACommand {
             get => aCommand;
         }
 
-        public Message(int parId, ICommand parCommand = null)
+        public Message(MessageCodes parCode, ICommand parCommand = null)
         {
-            this.aId = parId;
+            this.aMessageCode = parCode;
             this.aCommand = parCommand;
         }
 

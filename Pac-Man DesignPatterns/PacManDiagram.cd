@@ -3,35 +3,35 @@
   <Class Name="Pac_Man_DesignPatterns.GhostFactory.GhostFactory" Collapsed="true">
     <Position X="15.25" Y="11" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GhostFactory\GhostFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.GhostFactory.CyanGhost" Collapsed="true">
     <Position X="11.25" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GhostFactory\CyanGhost.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.GhostFactory.RedGhost" Collapsed="true">
     <Position X="13.25" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GhostFactory\RedGhost.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.GhostFactory.OrangeGhost" Collapsed="true">
     <Position X="15.25" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GhostFactory\OrangeGhost.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.GhostFactory.PinkGhost" Collapsed="true">
     <Position X="17.25" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GhostFactory\PinkGhost.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -53,7 +53,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAADAAAgAAAAAAAAAAAAAgAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <HashCode>CAQAAAAAwAAAgoQgAAAgAAgAAAABAAAAAIAAAAAAACA=</HashCode>
       <FileName>Entities\Entity.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -63,17 +63,14 @@
   <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts.Ghost" Collapsed="true">
     <Position X="15.25" Y="13.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAgAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AgRCAAAgAAAQBAAAABAAAAAAAAVAAAACIEAAAQAAQEA=</HashCode>
       <FileName>Entities\MovableEntity\Ghosts\Ghost.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="IGhostStrategy" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.Entities.MovableEntity.MovableEntity" Collapsed="true">
     <Position X="12.25" Y="13.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AABAgAAAAIAAIAABACAAAAAAAgAAAiABAAAAQAAgEAA=</HashCode>
       <FileName>Entities\MovableEntity\MovableEntity.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -127,7 +124,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAoAAAAAAAAAAQACAAAAIABIAAAAAABAAAA=</HashCode>
+      <HashCode>AARAAAAQAAoAAAAIAAAAAQAAAAAAIABIAAAAAABAAAA=</HashCode>
       <FileName>Entities\MovableEntity\PacMan.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -164,14 +161,14 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AQRABAAAEAJAggAAAAAAAQAAAAgAAIAAAAAQAAAAAAA=</HashCode>
+      <HashCode>AQRABAAAEAJAhgAAAAAAAQAABAgAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>Game\GameManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Property Name="Game" />
       <Property Name="LevelDirector" />
       <Property Name="ILevelBuilder" />
       <Property Name="IMazeProduct" />
-      <Property Name="Game" />
       <Property Name="UIManager" />
       <Property Name="KeyHandler" />
       <Property Name="Implementation" />
@@ -187,7 +184,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAABAAAAAAAAAAAgQAAAAAEACAAAAAAAAAAABA=</HashCode>
+      <HashCode>BAQAAAAAJAAAAgAAAAAAgQAAAAAEACAAAAAAAAAAABA=</HashCode>
       <FileName>Game\UIManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -198,14 +195,14 @@
   <Class Name="Pac_Man_DesignPatterns.Game.KeyHandler" Collapsed="true">
     <Position X="30.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Game\KeyHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.Game.Game" Collapsed="true">
     <Position X="5.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAIAIAwAAAAAAAAAAAAAAAAAAAAAAAQAAQAY=</HashCode>
+      <HashCode>AAZACAIAAICYAwAFAEACAAAAAABDCIAEQADIAUACSB4=</HashCode>
       <FileName>Game\Game.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -228,7 +225,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgEAACAAAAIAAQAAAAAAAAAAAAAAACAAAEAA=</HashCode>
+      <HashCode>AAAEAAAAgEAQCAACgIAAQAAIABAAAAAAAAAACAAAEAA=</HashCode>
       <FileName>Level\LevelBuilder.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -238,18 +235,10 @@
   </Class>
   <Class Name="Pac_Man_DesignPatterns.Level.LevelDirector" Collapsed="true">
     <Position X="29.5" Y="2.75" Width="1.5" />
-    <AssociationLine Name="Composition" Type="Pac_Man_DesignPatterns.Level.IMazeProduct">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.115" Y="0.62" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAACCAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CQAAAAAAAAQgAAAAJAQAAAAAAAAAAAAAAAECAAAAAAA=</HashCode>
       <FileName>Level\LevelDirector.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Composition" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Pac_Man_DesignPatterns.Menu.MenuManager">
     <Position X="22" Y="11" Width="1.5" />
@@ -285,7 +274,7 @@
   <Class Name="Pac_Man_DesignPatterns.Strategy.CyanGhostStrategy" Collapsed="true">
     <Position X="23.25" Y="14" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAGgAAAAAAAAAAAAAAAAAAAAAAAIAAAgAA=</HashCode>
       <FileName>Strategy\CyanGhostStrategy.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -296,7 +285,7 @@
   <Class Name="Pac_Man_DesignPatterns.Strategy.PinkGhostStrategy" Collapsed="true">
     <Position X="23.25" Y="14.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Strategy\PinkGhostStrategy.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -307,7 +296,7 @@
   <Class Name="Pac_Man_DesignPatterns.Strategy.OrangeGhostStrategy" Collapsed="true">
     <Position X="23.25" Y="15.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Strategy\OrangeGhostStrategy.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -318,18 +307,15 @@
   <Class Name="Pac_Man_DesignPatterns.Strategy.RedGhostStrategy" Collapsed="true">
     <Position X="23.25" Y="16.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Strategy\RedGhostStrategy.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="IGhostStrategy" />
-    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Interface Name="Pac_Man_DesignPatterns.Level.IMazeProduct" Collapsed="true">
     <Position X="29.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAwAAAAEAAAAAEAAAAgYAAAAAIgAAIAAgAAAEAA=</HashCode>
       <FileName>Level\IMazeProduct.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -341,7 +327,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAACAAAAIAAQAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAACAAAgIAAQAAAAAAAAAAAAAAACAAAAAA=</HashCode>
       <FileName>Level\ILevelBuilder.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -365,7 +351,7 @@
   <Interface Name="Pac_Man_DesignPatterns.Strategy.IGhostStrategy" Collapsed="true">
     <Position X="20.25" Y="13.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Strategy\IGhostStrategy.cs</FileName>
     </TypeIdentifier>
   </Interface>

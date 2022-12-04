@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Strategy;
 using Pac_Man_DesignPatterns.Game;
+using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
 {
     public class Pink : Ghost
     {
-        public Pink(Texture2D parTexture2D, int parPositionX, int parPositionY, int parSize, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector) : base(parTexture2D ,parPositionX, parPositionY, parSize, null, Vector2.Zero, parGhostStrategy, parCollisionDetector)
+        public Pink(string parTexturePath, int parPositionX, int parPositionY, int parSize, Utilities parUtilities, Vector2 parGhostHousePos, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath) : base(parTexturePath, parPositionX, parPositionY, parSize, parUtilities, parGhostHousePos, parGhostStrategy, parCollisionDetector, parFrightenedTexturePath, parDeadTexturePath)
         {
         }
     }

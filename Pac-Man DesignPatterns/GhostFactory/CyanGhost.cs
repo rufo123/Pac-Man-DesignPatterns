@@ -15,9 +15,9 @@ namespace Pac_Man_DesignPatterns.GhostFactory
     public class CyanGhost : GhostFactory
     {
 
-        public override Ghost CreateGhost(Texture2D parTexture, int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector)
+        public override Ghost CreateGhost(string parTexturePath, int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath)
         {
-            return new Cyan(parTexture, parXPosition, parYPosition, parScale, null, Vector2.Zero, new CyanGhostStrategy(), parCollisionDetector);
+            return new Cyan(parTexturePath, parXPosition, parYPosition, parScale, null, parGhostHousePos, new CyanGhostStrategy(), parCollisionDetector, parFrightenedTexturePath, parDeadTexturePath);
         }
     }
 }

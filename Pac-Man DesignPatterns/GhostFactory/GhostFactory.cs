@@ -12,6 +12,6 @@ namespace Pac_Man_DesignPatterns.GhostFactory
 {
     public abstract class GhostFactory
     {
-        public abstract Ghost CreateGhost(Texture2D parTexture,int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector);
+        public abstract Ghost CreateGhost(string parTexturePath, int parXPosition, int parYPosition, int parScale, Vector2 parGhostHousePos, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath);
     }
 }

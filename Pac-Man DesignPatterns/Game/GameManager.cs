@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Pac_Man_DesignPatterns.Game
 {
@@ -96,9 +97,9 @@ namespace Pac_Man_DesignPatterns.Game
 
         public void Update(Message parMessage)
         {
-            switch (parMessage.Id)
+            switch (parMessage.MessageCode)
             {
-                case -1:
+                case MessageCodes.CookieEaten:
                     //Cosi
                     if (parMessage.ACommand is not null)
                     {
@@ -108,6 +109,26 @@ namespace Pac_Man_DesignPatterns.Game
                 default:
                     break;
             }
+        }
+
+        public void SetGhostsFrightened()
+        {
+            Game.SetGhostFrightened();
+        }
+
+        public Vector2 GetRandomTile(int parIndex)
+        {
+           return Game.GetRandomTile(parIndex);
+        }
+
+        public void ReSpawnPacMan()
+        {
+            Game.PacMan.SeatDead();
+        }
+
+        public Vector2 GetOtherGhostPositionForCyan()
+        {
+            return Game.GetOtherGhostPositionForCyan();
         }
     }
 }

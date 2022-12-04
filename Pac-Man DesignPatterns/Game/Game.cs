@@ -13,56 +13,72 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using Microsoft.Xna.Framework.Content;
 using Pac_Man_DesignPatterns.Entities.TileEntity;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace Pac_Man_DesignPatterns.Game
 {
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game : Microsoft.Xna.Framework.Game, IObserver
     {
-        private GraphicsDeviceManager aGraphics;
+        private readonly GraphicsDeviceManager aGraphics;
         private SpriteBatch aSpriteBatch;
-        private Entity[] aEntityArray;
-        private KeyHandler aKeyHandler;
+        private readonly Entity[] aEntityArray;
+        private readonly KeyHandler aKeyHandler;
 
-        private LevelBuilder aLevelBuilder;
-        private LevelDirector aLevelDirector;
+        private readonly LevelBuilder aLevelBuilder;
+        private readonly LevelDirector aLevelDirector;
 
         private IMazeProduct aLevelMaze;
 
         private CollisionDetector aCollisionDetector;
 
-        private Random aRandom;
+        private CollisionDetector aCollisionDetectorWithGhosts;
 
-        private Random aRandomSeedGenerator;
+        private readonly Random aRandom;
 
-        private RedGhost aRedGhostFactory;
+        private readonly Random aRandomSeedGenerator;
 
-        private CyanGhost aCyanGhostFactory;
+        private readonly RedGhost aRedGhostFactory;
 
-        private PinkGhost aPinkGhostFactory;
+        private readonly CyanGhost aCyanGhostFactory;
 
-        private OrangeGhost aOrangeGhostFactory;
+        private readonly PinkGhost aPinkGhostFactory;
+
+        private readonly OrangeGhost aOrangeGhostFactory;
 
         private PathFindingManager aPathFindingManager;
 
-        private int[] aPathEntities;
-
-        private Texture2D aWalltexture;
-
-        private bool aStartPathFind;
-
         private PacMan aPacMan;
 
-        private TileEntity[] aScatterPoints;
+        private Entity[] aScatterPoints;
 
         private GhostHouse aGhostHouse;
 
+        private UIManager aUIManager;
+
+        private Vector2 aMazeSizeVector;
+
+        private float aXOffset;
+        private float aYOffset;
+
+        private readonly Vector2[] aArrayRandomTiles;
+
         public PacMan PacMan => aPacMan;
 
-        public TileEntity[] ScatterPoints => aScatterPoints;
+        public Entity[] ScatterPoints => aScatterPoints;
+
+        private float aTimer = 0;
 
         public GhostHouse GhostHouse => aGhostHouse;
+
+        private Texture2D aDebugWallTexture;
+
+        public Vector2[] ArrayRandomTiles => aArrayRandomTiles;
+
+        public Dictionary<TexturesEnum, string> aDictionaryTexturePaths;
 
         public Game()
         {
@@ -70,7 +86,7 @@ namespace Pac_Man_DesignPatterns.Game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            aEntityArray = new Entity[2];
+            aEntityArray = new Entity[5];
             aKeyHandler = new KeyHandler();
 
             aLevelBuilder = new LevelBuilder();
@@ -84,9 +100,10 @@ namespace Pac_Man_DesignPatterns.Game
             aCyanGhostFactory = new CyanGhost();
             aOrangeGhostFactory = new OrangeGhost();
 
-            
+            aArrayRandomTiles = new Vector2[4];
 
-           
+            aDictionaryTexturePaths = new Dictionary<TexturesEnum, string>();
+
         }
 
         public GhostFactory.GhostFactory GhostFactory
@@ -110,66 +127,90 @@ namespace Pac_Man_DesignPatterns.Game
             // TODO: Add your initialization logic here
 
             aGraphics.PreferredBackBufferWidth = 800;
-            aGraphics.PreferredBackBufferHeight = 800;
+            aGraphics.PreferredBackBufferHeight = 850;
             aGraphics.ApplyChanges();
 
+            InitTexturesDictionary();
+
+            aLevelBuilder.InitTextures(Content, GraphicsDevice, aDictionaryTexturePaths[TexturesEnum.GHOST_HOUSE], aDictionaryTexturePaths[TexturesEnum.COOKIE], aDictionaryTexturePaths[TexturesEnum.POWERCOOKIE], aDictionaryTexturePaths[TexturesEnum.WALL]);
+            aLevelDirector.ConvertLevelFromPathToBlueprint("Content\\assets\\levels\\level1.txt", aLevelDirector.TilesScale);
+            aLevelMaze = aLevelDirector.CreateLevel();
+
+            aMazeSizeVector = new Vector2(28, 31);
+
+            float tmpGameWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            aXOffset = (tmpGameWidth - (aLevelDirector.TilesScale * aMazeSizeVector.X)) / 2;
+            aYOffset = 100;
+
+            aGhostHouse = (GhostHouse)aLevelMaze.GetGhostHouse()[0];
+            aScatterPoints = aLevelMaze.GetGhostScatterPoints();
+
+            Vector2 tmpSpawnPointTemp = new Vector2(aGhostHouse.Position.X, aGhostHouse.Position.Y);
+
+            aPathFindingManager = new PathFindingManager(28, 31, aLevelMaze.GetWalls(), aLevelDirector.TilesScale);
+            aCollisionDetector = new CollisionDetector(aLevelMaze.GetAllEntities());
+
+            Vector2 tmpGhostHouseTargetPos = new Vector2(aGhostHouse.Position.X, aGhostHouse.Position.Y + aLevelDirector.TilesScale);
+
+            aEntityArray[1] = aRedGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
+            aEntityArray[2] = aPinkGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
+            aEntityArray[3] = aCyanGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
+            aEntityArray[4] = aOrangeGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
+
+            List<Entity> tmpListAll = aLevelMaze.GetAllEntities().ToList();
+            tmpListAll.Add(aEntityArray[1]);
+            tmpListAll.Add(aEntityArray[2]);
+            tmpListAll.Add(aEntityArray[3]);
+            tmpListAll.Add(aEntityArray[4]);
+
+            aCollisionDetectorWithGhosts = new CollisionDetector(tmpListAll);
+
+            aPacMan = new PacMan(aDictionaryTexturePaths[TexturesEnum.PACMAN], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y - aLevelDirector.TilesScale, aLevelDirector.TilesScale, aCollisionDetectorWithGhosts);
+
+            aEntityArray[0] = aPacMan;
+
+            aUIManager = new UIManager(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, aYOffset), aLevelDirector.TilesScale, GraphicsDevice);
+
             base.Initialize();
+        }
+
+        private void InitTexturesDictionary()
+        {
+            aDictionaryTexturePaths.Add(TexturesEnum.PACMAN, "assets\\entitites\\pacman\\pacman");
+            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_GENERAL, "assets\\entitites\\ghost");
+            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_FRIGHTENED, "assets\\entitites\\ghost_frightened");
+            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_DEAD, "assets\\entitites\\ghost_dead");
+            aDictionaryTexturePaths.Add(TexturesEnum.WALL, "assets\\entitites\\wall");
+            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_HOUSE, "assets\\entitites\\ghost_house");
+            aDictionaryTexturePaths.Add(TexturesEnum.COOKIE, "assets\\entitites\\cookie");
+            aDictionaryTexturePaths.Add(TexturesEnum.POWERCOOKIE, "assets\\entitites\\power_cookie");
+            aDictionaryTexturePaths.Add(TexturesEnum.FOOD, "assets\\entitites\\cookie");
         }
 
         protected override void LoadContent()
         {
 
-            Vector2 tmpSpawnPointTemp = new Vector2(aLevelDirector.TilesScale, aLevelDirector.TilesScale);
-
             aSpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D tmPacmanTexture = Content.Load<Texture2D>("assets\\entitites\\pacman\\pacman");
-            
-            Texture2D tmpGhostTexture = Content.Load<Texture2D>("assets\\entitites\\ghost");
+            aDebugWallTexture = Content.Load<Texture2D>(aDictionaryTexturePaths[TexturesEnum.WALL]);
 
-            
-
-            Texture2D tmpWallTexture = Content.Load<Texture2D>("assets\\entitites\\wall");
-            Texture2D tmpGhostHouseTexture = Content.Load<Texture2D>("assets\\entitites\\ghost_house");
-            Texture2D tmpFoodTexture = Content.Load<Texture2D>("assets\\entitites\\pacman\\pacman");
-
-            aWalltexture = tmpWallTexture;
-
-      
-
-            Texture2D[] tmpWallTextureArray = new Texture2D[2];
-
-            for (int i = 1; i <= 2; i++)
+            foreach (var itemMazeEntity in aLevelMaze.GetAllEntities())
             {
-                
-                Rectangle sourceRectangle = new Rectangle(0, (tmpWallTexture.Height / 2) * (i - 1), (tmpWallTexture.Width), (tmpWallTexture.Height / 2));
-                
-                Texture2D cropTexture = new Texture2D(GraphicsDevice, sourceRectangle.Width, sourceRectangle.Height);
-                Color[] data = new Color[(sourceRectangle.Width) * (sourceRectangle.Height)];
-                tmpWallTexture.GetData(0, sourceRectangle, data, 0, data.Length);
-                cropTexture.SetData(data);
-
-                tmpWallTextureArray[i - 1] = cropTexture;
+                itemMazeEntity.LoadContent(Content);
             }
 
-            aLevelBuilder.LoadTextures(tmpFoodTexture, tmpGhostHouseTexture, tmpWallTextureArray);
-            aLevelDirector.ConvertLevelFromPathToBlueprint("Content\\assets\\levels\\level1.txt", aLevelDirector.TilesScale);
-            aLevelMaze = aLevelDirector.CreateLevel();
+            for (int i = 0; i < aEntityArray.Length; i++)
+            {
+                aEntityArray[i].LoadContent(Content);
+            }
 
-            aScatterPoints = aLevelMaze.GetGhostScatterPoints();
+            aUIManager.LoadContent(Content);
 
-            aGhostHouse = (GhostHouse)aLevelMaze.GetGhostHouse()[0];
-
-           
-
-            aPathFindingManager = new PathFindingManager(28, 31, aLevelMaze.GetWalls(), aLevelDirector.TilesScale);
+            aPacMan.RegisterObserver(aUIManager);
+            aPacMan.RegisterObserver(this);
 
 
-            aCollisionDetector = new CollisionDetector(aLevelMaze.GetAllEntities());
 
-            aEntityArray[1] = aRedGhostFactory.CreateGhost(tmpGhostTexture, (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y, aLevelDirector.TilesScale, aGhostHouse.Position, aCollisionDetector);
-            aPacMan = new PacMan(tmPacmanTexture, (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y, aLevelDirector.TilesScale, aCollisionDetector);
-            aEntityArray[0] = aPacMan;
 
             // TODO: use this.Content to load your game content here
         }
@@ -179,45 +220,41 @@ namespace Pac_Man_DesignPatterns.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.P)) {
-                aStartPathFind = true;
-            }
-
             aSpriteBatch.Begin();
 
-            int[] tmpPathFromPacman = null;
+            aTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (aTimer > 0.1)
+            {
+                foreach (Entity tmpEntity in aEntityArray)
+                {
+                    if (tmpEntity is Ghost tmpGhost)
+                    {
+                        int[] tmpTargetPath = aPathFindingManager.GetShortestPath(tmpGhost.GetTargetPosition(), new DjkistraPathFind());
+
+                        if (tmpTargetPath is not null)
+                        {
+                            var tmpConstructedPath = aPathFindingManager.ConstructPath(tmpGhost.Position, tmpTargetPath);
+
+                            tmpGhost.SetPath(aPathFindingManager.ConvertTargetIdsToVectorArray(tmpConstructedPath));
+                        }
+                    }
+                }
+
+                aTimer = 0;
+            }
 
             foreach (Entity entity in aEntityArray)
             {
                 if (entity is MovableEntity)
                 {
-                    if (entity is Ghost)
+                    if (entity is Ghost ghost)
 
                     {
-                       int[] tmpTargetPath = aPathFindingManager.GetShortestPath(((Ghost)entity).GetTargetPosition(), new DjkistraPathFind());
-
-                        var test = aPathFindingManager.ConstructPath(entity.Position, tmpTargetPath);
-
-                        aPathEntities = test;
-
-
-                        if (test.Length > 0 && aStartPathFind)
-                        {
-                            int tmpChasedBlock = test.Length > 1 ? test[0] : test[0];
-
-                            var pos = aPathFindingManager.ConvertTargetIdToVector(tmpChasedBlock);
-                            ((Ghost)entity).PursuitTarget(pos);
-                        }
-
-
+                        ghost.PursuitTarget();
                     }
                 }
             }
-
-
-
-            
 
             ControlEntityMovement(parGameTime: gameTime);
 
@@ -234,51 +271,50 @@ namespace Pac_Man_DesignPatterns.Game
 
             aSpriteBatch.Begin();
 
+            aUIManager.Draw(aSpriteBatch);
+
             foreach (var itemMaze in aLevelMaze.GetWalls())
             {
-                itemMaze.Draw(aSpriteBatch);
+                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
+
             }
             foreach (var itemMaze in aLevelMaze.GetFood())
             {
-                itemMaze.Draw(aSpriteBatch);
+                if (!((TileEntity)itemMaze).IsHidden)
+                {
+                    itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
+                }
             }
             foreach (var itemMaze in aLevelMaze.GetOtherObjects())
             {
-                itemMaze.Draw(aSpriteBatch);
+                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
             }
 
             foreach (var itemMaze in aLevelMaze.GetGhostHouse())
             {
-                itemMaze.Draw(aSpriteBatch);
+                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
             }
+
+            int tmpIndex = 0;
 
             foreach (Entity entity in aEntityArray)
             {
-                entity.Draw(aSpriteBatch);
-            }
 
-         /*     List<Rectangle> tmpList = new List<Rectangle>();
-
-            for (int i = 0; i < aPathEntities.Length; i++)
-            {
-                Rectangle testeq = new Rectangle((int)aPathFindingManager.ConvertTargetIdToVector(aPathEntities[i]).X, (int)aPathFindingManager.ConvertTargetIdToVector(aPathEntities[i]).Y, aLevelDirector.TilesScale, aLevelDirector.TilesScale);
-
-                tmpList.Add(testeq);
-            }
-
-            for (int i = 0; i < tmpList.Count; i++)
-            {
-                if (i == 0)
+                if (entity is not null)
                 {
-                    aSpriteBatch.Draw(aWalltexture, tmpList[i], Color.Cyan);
-                }
-                else {
-                    aSpriteBatch.Draw(aWalltexture, tmpList[i], Color.Red);
-                }
-                
-            } */
+                    entity.Draw(aSpriteBatch, aXOffset, aYOffset);
 
-            
+
+                    if (entity is Ghost tmpGhost)
+                    {
+                        DrawDebugPath(tmpGhost, tmpIndex);
+                    }
+
+                    tmpIndex++;
+
+                }
+            }
+
 
             aSpriteBatch.End();
 
@@ -294,23 +330,77 @@ namespace Pac_Man_DesignPatterns.Game
             {
                 if (entity is MovableEntity)
                 {
-                    if (entity is PacMan)
+                    if (entity is PacMan tmpPacManEntity)
                     {
-                        PacMan tmpPacmanEntity = (PacMan)entity;
-
                         Direction tmpInputDirection = aKeyHandler.GetKeyInput();
-                        tmpPacmanEntity.ChangeDirection(tmpInputDirection);
-                    }
-                    else
-                    {
+                        tmpPacManEntity.ChangeDirection(tmpInputDirection);
                     }
 
                     entity.Update(parGameTime);
-                    
+
 
                 }
             }
 
+        }
+
+        private void DrawDebugPath(Ghost parGhost, int parIndex)
+        {
+            var tmpPathArray = parGhost.GetPath().ToArray();
+
+            for (int i = 0; i < tmpPathArray.Length; i++)
+            {
+
+                int tmpLeft = (int)tmpPathArray[i].X;
+                int tmpTop = (int)tmpPathArray[i].Y;
+
+                Wall tmpWall = new Wall(aDebugWallTexture, tmpLeft, tmpTop, aLevelDirector.TilesScale, 0, 1);
+
+                tmpWall.Draw(aSpriteBatch, aXOffset, aYOffset, parIndex);
+            }
+        }
+
+        public void SetGhostFrightened()
+        {
+
+            for (int i = 0; i < ArrayRandomTiles.Length; i++)
+            {
+                ArrayRandomTiles[i] = GenerateRandomTile();
+            }
+
+            foreach (Entity tmpEntity in aEntityArray)
+            {
+                if (tmpEntity is Ghost tmpGhost)
+                {
+                    tmpGhost.GhostState.PowerCookieActivated();
+                }
+            }
+        }
+
+        private Vector2 GenerateRandomTile()
+        {
+
+            int tmpRandomIndex = aLevelMaze.GetEmptySpaces() is not null ? aRandom.Next(0, aLevelMaze.GetEmptySpaces().Length) : 0;
+
+            return aLevelMaze.GetEmptySpaces() is not null ? aLevelMaze.GetEmptySpaces()[tmpRandomIndex] : Vector2.Zero;
+        }
+
+        public Vector2 GetRandomTile(int parIndex)
+        {
+            return aArrayRandomTiles[parIndex];
+        }
+
+        public void Update(Message parMessage)
+        {
+            if (parMessage is not null && parMessage.ACommand is not null)
+            {
+                parMessage.ACommand.Execute();
+            }
+        }
+
+        public Vector2 GetOtherGhostPositionForCyan()
+        {
+            return aEntityArray[1].Position;
         }
     }
 }

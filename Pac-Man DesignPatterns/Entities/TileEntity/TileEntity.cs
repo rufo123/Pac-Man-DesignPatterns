@@ -9,8 +9,19 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
 {
     public abstract class TileEntity : Entity
     {
-        protected TileEntity(Texture2D parTexture,int parPositionX, int parPositionY, int parSize, int parRotation = 0) : base(parTexture, parPositionX, parPositionY, parSize, parRotation)
+
+        protected bool aIsHidden;
+
+        protected TileEntity(string parTexturePath, int parPositionX, int parPositionY, int parSize, int parRotation = 0) : base(parTexturePath, parPositionX, parPositionY, parSize, parRotation)
         {
+            aIsHidden = false;
         }
+
+        protected TileEntity(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, int parRotation = 0) : base(parTexture, parPositionX, parPositionY, parSize, parRotation)
+        {
+            aIsHidden = false;
+        }
+
+        public bool IsHidden => aIsHidden;
     }
 }

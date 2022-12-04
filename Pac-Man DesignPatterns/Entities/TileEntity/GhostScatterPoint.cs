@@ -9,7 +9,7 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
 {
     internal class GhostScatterPoint : TileEntity
     {
-        public GhostScatterPoint(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, int parRotation = 0) : base(parTexture, parPositionX, parPositionY, parSize, parRotation)
+        public GhostScatterPoint(string parTexturePath, int parPositionX, int parPositionY, int parSize, int parRotation = 0) : base(parTexturePath, parPositionX, parPositionY, parSize, parRotation)
         {
         }
     }

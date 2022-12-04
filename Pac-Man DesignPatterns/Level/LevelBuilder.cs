@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Content;
 
 namespace Pac_Man_DesignPatterns.Level
 {
@@ -16,9 +17,10 @@ namespace Pac_Man_DesignPatterns.Level
         // ReSharper disable once InconsistentNaming
         protected IMazeProduct aMazeProduct;
 
-        private Texture2D aFoodTexture;
-        private Texture2D aGhostHouseTexture;
+        private string aGhostHouseTexturePath;
         private Texture2D[] aWallTexture;
+        private string aCookieTexturePath;
+        private string aPowerCookieTexturePath;
 
         public LevelDirector Agregation { get; set; }
 
@@ -30,12 +32,34 @@ namespace Pac_Man_DesignPatterns.Level
             }
         }
 
-        public void LoadTextures(Texture2D parFoodTexture, Texture2D parGhostHouseTexture, Texture2D[] parWallTexture)
+        public void InitTextures(ContentManager parContentManager, GraphicsDevice parGraphicsDevice, string parGhostHouseTexturePath, string parCookieTexturePath, string parPowerCookieTexturePath, string parWallTexture)
         {
-            aFoodTexture = parFoodTexture;
-            aWallTexture = parWallTexture;
-            aGhostHouseTexture = parGhostHouseTexture;
+            Texture2D tmpWallTexture = parContentManager.Load<Texture2D>(parWallTexture);
+            aWallTexture = LoadWallArrayTexture(tmpWallTexture, parGraphicsDevice);
+
+            aGhostHouseTexturePath = parGhostHouseTexturePath;
+            aCookieTexturePath = parCookieTexturePath;
+            aPowerCookieTexturePath = parPowerCookieTexturePath;
             aMazeProduct = new MazeProduct();
+        }
+
+        private Texture2D[] LoadWallArrayTexture(Texture2D parWallTexture, GraphicsDevice parGraphicsDevice)
+        {
+            Texture2D[] tmpWallTextureArray = new Texture2D[2];
+
+            for (int i = 1; i <= 2; i++)
+            {
+                Rectangle sourceRectangle = new Rectangle(0, (parWallTexture.Height / 2) * (i - 1), (parWallTexture.Width), (parWallTexture.Height / 2));
+
+                Texture2D cropTexture = new Texture2D(parGraphicsDevice, sourceRectangle.Width, sourceRectangle.Height);
+                Color[] data = new Color[(sourceRectangle.Width) * (sourceRectangle.Height)];
+                parWallTexture.GetData(0, sourceRectangle, data, 0, data.Length);
+                cropTexture.SetData(data);
+
+                tmpWallTextureArray[i - 1] = cropTexture;
+            }
+
+            return tmpWallTextureArray;
         }
 
         public void BuildFood(List<BluePrint> parFoodBlueprint, int parScale)
@@ -44,7 +68,7 @@ namespace Pac_Man_DesignPatterns.Level
 
             foreach (var itemFoodBp in parFoodBlueprint)
             {
-                aMazeProduct.AddFood(new Cookie(aFoodTexture, (int)itemFoodBp.Position.X, (int)itemFoodBp.Position.Y, parScale));
+                aMazeProduct.AddFood(new Cookie(aCookieTexturePath, (int)itemFoodBp.Position.X, (int)itemFoodBp.Position.Y, parScale));
                 tmpIndex++;
             }
         }
@@ -55,7 +79,7 @@ namespace Pac_Man_DesignPatterns.Level
 
             foreach (var itemGhostHouseBp in parGhostHouseBlueprint)
             {
-                aMazeProduct.AddGhostHouse(new GhostHouse(aGhostHouseTexture, (int)itemGhostHouseBp.Position.X, (int)itemGhostHouseBp.Position.Y, parScale, 90, 0));
+                aMazeProduct.AddGhostHouse(new GhostHouse(aGhostHouseTexturePath, (int)itemGhostHouseBp.Position.X, (int)itemGhostHouseBp.Position.Y, parScale, 90, 0));
                 tmpIndex++;
             }
         }
@@ -67,9 +91,12 @@ namespace Pac_Man_DesignPatterns.Level
             foreach (var itemScatterPointBp in parScatterPointBlueprint)
             {
                 aMazeProduct.AddGhostScatterPoint(new GhostScatterPoint(null, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale, 90));
+                aMazeProduct.AddFood(new PowerCookie(aPowerCookieTexturePath, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale));
+                aMazeProduct.AddEmptySpace(new Vector2((int)itemScatterPointBp.Position.X * parScale, (int)itemScatterPointBp.Position.Y * parScale));
                 tmpIndex++;
             }
         }
+
 
         public void BuildWalls(List<BluePrint> parWallsBlueprint, int parScale)
         {
@@ -81,8 +108,6 @@ namespace Pac_Man_DesignPatterns.Level
                 tmpDictWallsConnectedToTileWithPos.Add(parWallsBlueprint[i].Position, parWallsBlueprint[i]);
             }
 
-
-            int tmpIndex = 0;
 
             List<BluePrint> tmpPostponedInitBlueprint4Adj = new List<BluePrint>();
             List<BluePrint> tmpPostponedInitBlueprint3Adj = new List<BluePrint>();
@@ -185,28 +210,23 @@ namespace Pac_Man_DesignPatterns.Level
                 {
 
                     int tmpRotation = 0;
-                    bool tmpIsCorner = false;
 
                     switch (tmpNeighbours[0])
                     {
                         case Direction.UP:
                             tmpRotation = 0;
-                            tmpIsCorner = false;
                             itemWallsbp.AddConnectedToTileId(Direction.UP, GenerateVectorPosFromDirection(Direction.UP, parScale, itemWallsbp.Position));
                             break;
                         case Direction.DOWN:
                             tmpRotation = 180;
-                            tmpIsCorner = false;
                             itemWallsbp.AddConnectedToTileId(Direction.DOWN, GenerateVectorPosFromDirection(Direction.DOWN, parScale, itemWallsbp.Position));
                             break;
                         case Direction.LEFT:
                             tmpRotation = 270;
-                            tmpIsCorner = false;
                             itemWallsbp.AddConnectedToTileId(Direction.LEFT, GenerateVectorPosFromDirection(Direction.LEFT, parScale, itemWallsbp.Position));
                             break;
                         case Direction.RIGHT:
                             tmpRotation = 90;
-                            tmpIsCorner = false;
                             itemWallsbp.AddConnectedToTileId(Direction.RIGHT, GenerateVectorPosFromDirection(Direction.RIGHT, parScale, itemWallsbp.Position));
                             break;
                         default:
@@ -411,6 +431,14 @@ namespace Pac_Man_DesignPatterns.Level
                     return new Vector2(parPosition.X + parScale, parPosition.Y);
                 default:
                     return parPosition;
+            }
+        }
+
+        public void BuildEmptySpaces(List<BluePrint> parEmptySpacesBlueprint, int parScale)
+        {
+            foreach (var itemEmptySpace in parEmptySpacesBlueprint)
+            {
+                aMazeProduct.AddEmptySpace(itemEmptySpace.Position);
             }
         }
 

@@ -10,11 +10,11 @@ namespace Pac_Man_DesignPatterns.Level
 {
     public class BluePrint
     {
-        private Vector2 aPosition;
-        private int aVariationIndex;
-        private Direction[] aSameTypeNeighbours;
+        private readonly Vector2 aPosition;
+        private readonly int aVariationIndex;
+        private readonly Direction[] aSameTypeNeighbours;
 
-        private Dictionary<Direction, Vector2> aConnectedToTileId;
+        private readonly Dictionary<Direction, Vector2> aConnectedToTileId;
   
 
         public BluePrint(Vector2 parPosition, int parVariationIndex, Direction[] parSameTypeNeighbours = null)

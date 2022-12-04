@@ -1,29 +1,23 @@
-﻿using Microsoft.Xna.Framework;
-using Pac_Man_DesignPatterns.Entities;
+﻿using Pac_Man_DesignPatterns.Entities;
 using Pac_Man_DesignPatterns.Entities.MovableEntity;
 using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
+using Pac_Man_DesignPatterns.Game;
 using Pac_Man_DesignPatterns.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Design;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Pac_Man_DesignPatterns.Strategy
 {
     internal class CyanGhostStrategy : IGhostStrategy
     {
-        internal IGhostStrategy IGhostStrategy
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        private Ghost aOtherGhost;
-
-        private PacMan aPacman;
 
         public Vector2 GetTwoTilesAhead(MovableEntity parEntity) {
 
@@ -56,12 +50,35 @@ namespace Pac_Man_DesignPatterns.Strategy
 
         public Vector2 GetChaseTilePos()
         {
-            throw new NotImplementedException();
+
+            double tmpSinus = Math.Sin(180);
+            double tmpCosinus = Math.Cos(180);
+
+            // Translate Point Back To Origin
+
+            Vector2 tmpPacPos = GameManager.GetInstance().Game.PacMan.Position;
+
+            var varPointOrX= GameManager.GetInstance().Game.GetOtherGhostPositionForCyan().X - tmpPacPos.X;
+            var varPointOrY= GameManager.GetInstance().Game.GetOtherGhostPositionForCyan().Y - tmpPacPos.Y;
+
+            // Rotate
+
+            double xnew = varPointOrX * tmpCosinus - varPointOrY * tmpSinus;
+            double ynew = varPointOrX * tmpSinus + varPointOrY * tmpCosinus;
+            
+            // Translate Back
+
+            varPointOrX = (float)(xnew + tmpPacPos.X);
+            varPointOrY = (float)(ynew + tmpPacPos.Y);
+
+
+            return new Vector2(varPointOrX - varPointOrX % GameManager.GetInstance().Game.PacMan.Size, varPointOrY - varPointOrY % GameManager.GetInstance().Game.PacMan.Size);
+
         }
 
         public Vector2 GetScatterTilePos()
         {
-            throw new NotImplementedException();
+            return GameManager.GetInstance().Game.ScatterPoints[2].Position;
         }
 
         

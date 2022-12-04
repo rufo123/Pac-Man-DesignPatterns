@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Pac_Man_DesignPatterns.Utils;
 
-namespace Pac_Man_DesignPatterns.State
+namespace Pac_Man_DesignPatterns.State.Ghost
 {
     public abstract class GhostStateAbs
     {
 
-        private Ghost aGhost;
+        private readonly Entities.MovableEntity.Ghosts.Ghost aGhost;
 
-        public Ghost Ghost => aGhost;
+        public Entities.MovableEntity.Ghosts.Ghost Ghost => aGhost;
 
         private double aTimer;
 
-        private readonly int aTimerThreshold;
+        protected int aTimerThreshold;
+
+        private string aAlternativeTexturePath;
 
         public int TimerThreshold => aTimerThreshold;
 
@@ -30,10 +27,11 @@ namespace Pac_Man_DesignPatterns.State
             set => aTimer = value;
         }
 
-        protected GhostStateAbs(Ghost parGhost)
+        protected GhostStateAbs(Entities.MovableEntity.Ghosts.Ghost parGhost, string parAlternativeTexture = null)
         {
             this.aGhost = parGhost;
             this.aTimerThreshold = 10;
+            aAlternativeTexturePath = parAlternativeTexture;
         }
 
 
@@ -83,6 +81,11 @@ namespace Pac_Man_DesignPatterns.State
             return Vector2.Zero;
         }
 
+        public virtual Texture2D GetAlternativeTexture()
+        {
+            return null;
+        }
+
         public virtual void ExecuteLogic()
         {
 
@@ -91,6 +94,16 @@ namespace Pac_Man_DesignPatterns.State
         public virtual void PowerCookieActivated()
         {
 
+        }
+
+        public virtual void LoadAlternativeTexture(ContentManager parContent)
+        {
+            
+        }
+
+        public virtual float GetSpeed()
+        {
+            return Ghost.GetDefaultSpeed();
         }
 
 

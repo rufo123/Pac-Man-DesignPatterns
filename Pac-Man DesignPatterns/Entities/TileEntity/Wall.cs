@@ -16,5 +16,13 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
                 aColor = Color.Red;
             }
         }
+
+        public Wall(string parTexturePath, int parPositionX, int parPositionY, int parSize, int parRotation = 0, int parColor = 0) : base(parTexturePath, parPositionX, parPositionY, parSize, parRotation)
+        {
+            if (parColor != 0)
+            {
+                aColor = Color.Red;
+            }
+        }
     }
 }

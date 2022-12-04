@@ -9,12 +9,13 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
 {
     public class Cookie : Food
     {
-        public Cookie(Texture2D parTexture2D, int parPositionX, int parPositionY, int parSize) : base(parTexture2D, parPositionX, parPositionY, parSize)
+        public Cookie(string parTexturePath, int parPositionX, int parPositionY, int parSize) : base(parTexturePath, parPositionX, parPositionY, parSize)
         {
         }
 
         public override void Execute()
         {
+            aIsHidden = true;
             base.Execute();
             // Dorobit, zatial vyhodi Exec z basu
         }

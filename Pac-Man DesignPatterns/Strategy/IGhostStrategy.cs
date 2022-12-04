@@ -12,5 +12,6 @@ namespace Pac_Man_DesignPatterns.Strategy
         public Vector2 GetChaseTilePos();
 
         public Vector2 GetScatterTilePos();
+
     }
 }
