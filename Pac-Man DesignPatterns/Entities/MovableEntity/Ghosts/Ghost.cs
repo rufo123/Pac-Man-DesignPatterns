@@ -50,7 +50,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
         public IGhostStrategy GhostStrategy => aGhostStrategy;
 
 
-        protected Ghost(string parTexturePath, int parPositionX, int parPositionY, int parSize, Utilities parUtilities, Vector2 parGhostHousePos, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath) : base(parTexturePath, parPositionX, parPositionY, parSize, false)
+        protected Ghost(string parTexturePath, int parPositionX, int parPositionY, int parSize, Utilities parUtilities, Vector2 parGhostHousePos, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize,  false, parColor)
         {
             aGhostHousePos = parGhostHousePos;
             aGhostStrategy = parGhostStrategy;
@@ -62,6 +62,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
             aTarget = Position;
             aStackPath = new Stack<Vector2>();
             aTargetSource = Position;
+            aColorToReplace = new Color(134, 134, 134);
         }
 
         private void InitStates()

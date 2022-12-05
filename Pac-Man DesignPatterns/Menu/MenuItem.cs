@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pac_Man_DesignPatterns.Menu
 {
-    public abstract class AMenuItem
+    public abstract class MenuItem
     {
 #pragma warning disable CS0169
         private string aText;
@@ -20,6 +20,9 @@ namespace Pac_Man_DesignPatterns.Menu
             }
         }
 
-        public abstract void Press();
+        protected MenuItem(string parText)
+        {
+            aText = parText;
+        }
     }
 }

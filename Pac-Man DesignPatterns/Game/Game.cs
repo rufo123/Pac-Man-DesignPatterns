@@ -165,7 +165,7 @@ namespace Pac_Man_DesignPatterns.Game
 
             aCollisionDetectorWithGhosts = new CollisionDetector(tmpListAll);
 
-            aPacMan = new PacMan(aDictionaryTexturePaths[TexturesEnum.PACMAN], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y - aLevelDirector.TilesScale, aLevelDirector.TilesScale, aCollisionDetectorWithGhosts);
+            aPacMan = new PacMan(aDictionaryTexturePaths[TexturesEnum.PACMAN], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y - aLevelDirector.TilesScale, aLevelDirector.TilesScale, aCollisionDetectorWithGhosts, Color.White);
 
             aEntityArray[0] = aPacMan;
 
@@ -354,7 +354,7 @@ namespace Pac_Man_DesignPatterns.Game
                 int tmpLeft = (int)tmpPathArray[i].X;
                 int tmpTop = (int)tmpPathArray[i].Y;
 
-                Wall tmpWall = new Wall(aDebugWallTexture, tmpLeft, tmpTop, aLevelDirector.TilesScale, 0, 1);
+                Wall tmpWall = new Wall(aDebugWallTexture, tmpLeft, tmpTop, aLevelDirector.TilesScale, Color.White);
 
                 tmpWall.Draw(aSpriteBatch, aXOffset, aYOffset, parIndex);
             }

@@ -39,7 +39,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
         private readonly float aDefaultSpeed;
 
 
-        protected MovableEntity(string parTexturePath, int parPositionX, int parPositionY, int parSize, bool parControlledByUser) : base(parTexturePath, parPositionX, parPositionY, parSize)
+        protected MovableEntity(string parTexturePath, int parPositionX, int parPositionY, int parSize, bool parControlledByUser, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize, parColor)
         {
             this.aControlledByUser = parControlledByUser;
             aPixelsToMove = 64;

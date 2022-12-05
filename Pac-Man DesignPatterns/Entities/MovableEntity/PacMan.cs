@@ -36,7 +36,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
         public GameManager GameManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public UIManager UIManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public PacMan(string parTexturePath, int parPositionX, int parPositionY, int parSize, CollisionDetector parCollisionDetector) : base(parTexturePath, parPositionX, parPositionY, parSize, true)
+        public PacMan(string parTexturePath, int parPositionX, int parPositionY, int parSize, CollisionDetector parCollisionDetector, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize, true, parColor)
         {
             aListObservers = new List<IObserver>();
             aCollisionDetector = parCollisionDetector;

@@ -68,7 +68,7 @@ namespace Pac_Man_DesignPatterns.Level
 
             foreach (var itemFoodBp in parFoodBlueprint)
             {
-                aMazeProduct.AddFood(new Cookie(aCookieTexturePath, (int)itemFoodBp.Position.X, (int)itemFoodBp.Position.Y, parScale));
+                aMazeProduct.AddFood(new Cookie(aCookieTexturePath, (int)itemFoodBp.Position.X, (int)itemFoodBp.Position.Y, parScale, Color.White));
                 tmpIndex++;
             }
         }
@@ -79,7 +79,7 @@ namespace Pac_Man_DesignPatterns.Level
 
             foreach (var itemGhostHouseBp in parGhostHouseBlueprint)
             {
-                aMazeProduct.AddGhostHouse(new GhostHouse(aGhostHouseTexturePath, (int)itemGhostHouseBp.Position.X, (int)itemGhostHouseBp.Position.Y, parScale, 90, 0));
+                aMazeProduct.AddGhostHouse(new GhostHouse(aGhostHouseTexturePath, (int)itemGhostHouseBp.Position.X, (int)itemGhostHouseBp.Position.Y, parScale, Color.White, 90));
                 tmpIndex++;
             }
         }
@@ -90,8 +90,8 @@ namespace Pac_Man_DesignPatterns.Level
 
             foreach (var itemScatterPointBp in parScatterPointBlueprint)
             {
-                aMazeProduct.AddGhostScatterPoint(new GhostScatterPoint(null, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale, 90));
-                aMazeProduct.AddFood(new PowerCookie(aPowerCookieTexturePath, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale));
+                aMazeProduct.AddGhostScatterPoint(new GhostScatterPoint(null, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale, Color.White, 90));
+                aMazeProduct.AddFood(new PowerCookie(aPowerCookieTexturePath, (int)itemScatterPointBp.Position.X, (int)itemScatterPointBp.Position.Y, parScale, Color.White));
                 aMazeProduct.AddEmptySpace(new Vector2((int)itemScatterPointBp.Position.X * parScale, (int)itemScatterPointBp.Position.Y * parScale));
                 tmpIndex++;
             }
@@ -197,11 +197,11 @@ namespace Pac_Man_DesignPatterns.Level
                     if (tmpIsCorner)
                     {
 
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, tmpRotation));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, Color.White, tmpRotation));
                     }
                     else
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, tmpRotation, 1));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, Color.White, tmpRotation));
                     }
 
 
@@ -233,7 +233,7 @@ namespace Pac_Man_DesignPatterns.Level
                             break;
                     }
 
-                    aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, tmpRotation));
+                    aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, Color.White, tmpRotation));
 
                 }
                 else if (tmpNeighbours != null && tmpNeighbours.Length == 3)
@@ -265,14 +265,14 @@ namespace Pac_Man_DesignPatterns.Level
                     if (tmpHorizontalMatches > 1)
                     {
 
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, 90));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, Color.White, 90));
                         itemWallsbp.AddConnectedToTileId(Direction.LEFT, GenerateVectorPosFromDirection(Direction.LEFT, parScale, itemWallsbp.Position));
                         itemWallsbp.AddConnectedToTileId(Direction.RIGHT, GenerateVectorPosFromDirection(Direction.RIGHT, parScale, itemWallsbp.Position));
                     }
 
                     else if (tmpVerticalMatches > 1)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, 0));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[0], (int)itemWallsbp.Position.X, (int)itemWallsbp.Position.Y, parScale, Color.White, 0));
                         itemWallsbp.AddConnectedToTileId(Direction.UP, GenerateVectorPosFromDirection(Direction.UP, parScale, itemWallsbp.Position));
                         itemWallsbp.AddConnectedToTileId(Direction.DOWN, GenerateVectorPosFromDirection(Direction.DOWN, parScale, itemWallsbp.Position));
                     }
@@ -323,7 +323,7 @@ namespace Pac_Man_DesignPatterns.Level
 
                     if (tmpRightTile != null && tmpDownTile != null && tmpRightTile.GetConnectedToTileId(Direction.LEFT) == tmpPosition && tmpDownTile.GetConnectedToTileId(Direction.UP) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, 0));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, Color.White, 0));
 
                     }
 
@@ -331,7 +331,7 @@ namespace Pac_Man_DesignPatterns.Level
 
                     else if (tmpLeftTile != null && tmpDownTile != null && tmpLeftTile.GetConnectedToTileId(Direction.RIGHT) == tmpPosition && tmpDownTile.GetConnectedToTileId(Direction.UP) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, 90));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, Color.White, 90));
                     }
 
                     // LEFT - UP CORNER - 180
@@ -339,7 +339,7 @@ namespace Pac_Man_DesignPatterns.Level
 
                     else if (tmpLeftTile != null && tmpUpTile != null && tmpLeftTile.GetConnectedToTileId(Direction.RIGHT) == tmpPosition && tmpUpTile.GetConnectedToTileId(Direction.DOWN) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, 180));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, Color.White, 180));
 
                     }
 
@@ -347,7 +347,7 @@ namespace Pac_Man_DesignPatterns.Level
 
                     else if (tmpRightTile != null && tmpUpTile != null && tmpRightTile.GetConnectedToTileId(Direction.LEFT) == tmpPosition && tmpUpTile.GetConnectedToTileId(Direction.DOWN) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, 270));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint3Adj[i].Position.X, (int)tmpPostponedInitBlueprint3Adj[i].Position.Y, parScale, Color.White, 270));
 
                     }
 
@@ -381,14 +381,14 @@ namespace Pac_Man_DesignPatterns.Level
 
                     if (tmpRightTile != null && tmpDownTile != null && tmpRightTile.GetConnectedToTileId(Direction.LEFT) == tmpPosition && tmpDownTile.GetConnectedToTileId(Direction.UP) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, 0));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, Color.White, 0));
                     }
 
                     // LEFT - DOWN CORNER - 90
 
                     else if (tmpLeftTile != null && tmpDownTile != null && tmpLeftTile.GetConnectedToTileId(Direction.RIGHT) == tmpPosition && tmpDownTile.GetConnectedToTileId(Direction.UP) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, 90));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, Color.White, 90));
                     }
 
                     // LEFT - UP CORNER - 180
@@ -396,14 +396,14 @@ namespace Pac_Man_DesignPatterns.Level
 
                     else if (tmpLeftTile != null && tmpUpTile != null && tmpLeftTile.GetConnectedToTileId(Direction.RIGHT) == tmpPosition && tmpUpTile.GetConnectedToTileId(Direction.DOWN) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, 180));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, Color.White, 180));
                     }
 
                     // RIGHT - UP CORNER - 270
 
                     else if (tmpRightTile != null && tmpUpTile != null && tmpRightTile.GetConnectedToTileId(Direction.LEFT) == tmpPosition && tmpUpTile.GetConnectedToTileId(Direction.DOWN) == tmpPosition)
                     {
-                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, 270));
+                        aMazeProduct.AddWalls(new Wall(aWallTexture[1], (int)tmpPostponedInitBlueprint4Adj[i].Position.X, (int)tmpPostponedInitBlueprint4Adj[i].Position.Y, parScale, Color.White, 270));
                     }
                 }
             }

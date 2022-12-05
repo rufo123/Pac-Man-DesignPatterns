@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
 using Pac_Man_DesignPatterns.Entities.TileEntity;
+using Pac_Man_DesignPatterns.State.Ghost;
 using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Game
@@ -64,12 +66,13 @@ namespace Pac_Man_DesignPatterns.Game
         {
             aFontSmaller = parContentManager.Load<SpriteFont>("assets\\fonts\\font");
             aFontBigger = parContentManager.Load<SpriteFont>("assets\\fonts\\font_bigger");
+            aBackgroundTexture.SetData(new[] { Color.Purple });
         }
 
         public void Draw(SpriteBatch parSpriteBatch)
         {
 
-            aBackgroundTexture.SetData(new[] { Color.Purple });
+           
 
             parSpriteBatch.Draw(aBackgroundTexture, new Rectangle( 0, 0, (int)aSizeVector.X , (int)aSizeVector.Y - 20), Color.Purple);
 
@@ -107,7 +110,7 @@ namespace Pac_Man_DesignPatterns.Game
         {
             switch (parMessage.MessageCode)
             {
-                case 0:
+                case MessageCodes.CookieEaten:
 
                     if (parMessage.ACommand is PowerCookie)
                     {
@@ -117,6 +120,18 @@ namespace Pac_Man_DesignPatterns.Game
 
                     aScore++;
                     break;
+                case MessageCodes.GhostCollision:
+                {
+                    if (parMessage.ACommand is Ghost)
+                    {
+                        if (((Ghost)(parMessage.ACommand)).GhostState is GhostFrightenedState)
+                        {
+                            aScore += 20;
+                        }
+                    }
+
+                    break;
+                }
 
                 default:
                     break;

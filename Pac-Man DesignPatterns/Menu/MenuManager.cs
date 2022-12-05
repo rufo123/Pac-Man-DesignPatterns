@@ -12,14 +12,14 @@ namespace Pac_Man_DesignPatterns.Menu
 #pragma warning disable CS0414
         private bool aVisible;
 #pragma warning restore CS0414
-        private AMenuItem[] aArrayMenuItems;
+        private MenuItem[] aArrayMenuItems;
 
         public MenuManager()
         {
             aVisible = false;
         }
 
-        public void CreateMenu(AMenuItem[] parArrayMenuItems)
+        public void CreateMenu(MenuItem[] parArrayMenuItems)
         {
             aArrayMenuItems = parArrayMenuItems;
         }

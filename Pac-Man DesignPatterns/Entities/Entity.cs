@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
 using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Entities
@@ -19,6 +20,7 @@ namespace Pac_Man_DesignPatterns.Entities
 
         private Vector2 aPosition;
         protected Color aColor;
+        protected Color aColorToReplace;
 
         protected Texture2D aTexture;
 
@@ -29,7 +31,7 @@ namespace Pac_Man_DesignPatterns.Entities
             get => aSize;
         }
 
-        protected Entity(string parTexturePath, int parPositionX, int parPositionY, int parSize, int parRotation = 0)
+        protected Entity(string parTexturePath, int parPositionX, int parPositionY, int parSize, Color parColor, int parRotation = 0)
         {
             aSize = parSize;
 
@@ -39,13 +41,15 @@ namespace Pac_Man_DesignPatterns.Entities
 
             aTexturePath = parTexturePath;
 
-            aColor = Color.White;
+            aColor = parColor;
+
+            aColorToReplace = Color.White;
 
             aRotation = parRotation;
 
         }
 
-        protected Entity(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, int parRotation = 0)
+        protected Entity(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, Color parColor, int parRotation = 0)
         {
             aSize = parSize;
 
@@ -53,7 +57,7 @@ namespace Pac_Man_DesignPatterns.Entities
 
             aTexture = parTexture;
 
-            aColor = Color.White;
+            aColor = parColor;
 
             aRotation = parRotation;
 
@@ -73,7 +77,7 @@ namespace Pac_Man_DesignPatterns.Entities
             set => aPosition = value;
         }
 
-        public int Rotation 
+        public int Rotation
         {
             get => aRotation;
         }
@@ -103,6 +107,13 @@ namespace Pac_Man_DesignPatterns.Entities
             {
                 this.aTexture = parContent.Load<Texture2D>(aTexturePath);
             }
+
+            if (aColorToReplace != Color.White && aColor != Color.White)
+            {
+                this.ChangeColor(aColorToReplace, aColor);
+            }
+
+
         }
 
         public virtual void Update(GameTime parGameTime)
@@ -149,6 +160,30 @@ namespace Pac_Man_DesignPatterns.Entities
         public virtual Texture2D GetTexture()
         {
             return aTexture;
+        }
+
+        public void ChangeColor(Color parColorToReplace, Color parNewColor)
+        {
+            if (aTexture != null)
+            {
+                Color[] tmpColorArray = new Color[aTexture.Width * aTexture.Height];
+
+                aTexture.GetData<Color>(tmpColorArray);
+
+                for (int i = 0; i < tmpColorArray.Length; i++)
+                {
+                    if (tmpColorArray[i] == parColorToReplace)
+                    {
+                        tmpColorArray[i] = parNewColor;
+                    }
+                }
+
+                Texture2D tmpCopyTexture = new Texture2D(GameManager.GetInstance().Game.GraphicsDevice, aTexture.Width, aTexture.Height);
+                tmpCopyTexture.SetData(tmpColorArray);
+
+                aTexture = tmpCopyTexture;
+
+            }
         }
 
     }
