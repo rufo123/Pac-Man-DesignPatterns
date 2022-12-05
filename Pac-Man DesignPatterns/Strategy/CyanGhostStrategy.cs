@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Design;
+using Microsoft.Xna.Framework.Graphics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -50,30 +51,12 @@ namespace Pac_Man_DesignPatterns.Strategy
 
         public Vector2 GetChaseTilePos()
         {
-
-            double tmpSinus = Math.Sin(180);
-            double tmpCosinus = Math.Cos(180);
-
-            // Translate Point Back To Origin
-
             Vector2 tmpPacPos = GameManager.GetInstance().Game.PacMan.Position;
+            Vector2 tmpGhostPos = GameManager.GetInstance().Game.GetOtherGhostPositionForCyan();
 
-            var varPointOrX= GameManager.GetInstance().Game.GetOtherGhostPositionForCyan().X - tmpPacPos.X;
-            var varPointOrY= GameManager.GetInstance().Game.GetOtherGhostPositionForCyan().Y - tmpPacPos.Y;
+            var tmpDistance = tmpPacPos - tmpGhostPos;
 
-            // Rotate
-
-            double xnew = varPointOrX * tmpCosinus - varPointOrY * tmpSinus;
-            double ynew = varPointOrX * tmpSinus + varPointOrY * tmpCosinus;
-            
-            // Translate Back
-
-            varPointOrX = (float)(xnew + tmpPacPos.X);
-            varPointOrY = (float)(ynew + tmpPacPos.Y);
-
-
-            return new Vector2(varPointOrX - varPointOrX % GameManager.GetInstance().Game.PacMan.Size, varPointOrY - varPointOrY % GameManager.GetInstance().Game.PacMan.Size);
-
+            return tmpPacPos + tmpDistance;
         }
 
         public Vector2 GetScatterTilePos()

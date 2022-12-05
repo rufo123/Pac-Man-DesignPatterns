@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Pac_Man_DesignPatterns.Command;
+using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Menu
 {
-    public class QuitButton : MenuItem, ICommand
+    public class QuitButton : MenuItem
     {
         public QuitButton(string parText) : base(parText)
         {
         }
 
-        public void Execute()
+        public override void Execute()
         {
-            throw new NotImplementedException();
+            GameManager.GetInstance().Game.Exit();
         }
     }
 }

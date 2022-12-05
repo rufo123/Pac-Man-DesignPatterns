@@ -7,16 +7,15 @@ using Pac_Man_DesignPatterns.Command;
 
 namespace Pac_Man_DesignPatterns.Menu
 {
-    public class PlayButton : MenuItem, ICommand
+    public class PlayButton : MenuItem
     {
-
-        public void Execute()
-        {
-            throw new NotImplementedException();
-        }
-
         public PlayButton(string parText) : base(parText)
         {
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
         }
     }
 }

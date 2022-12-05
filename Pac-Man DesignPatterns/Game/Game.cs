@@ -18,6 +18,7 @@ using Microsoft.Xna.Framework.Content;
 using Pac_Man_DesignPatterns.Entities.TileEntity;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
+using Pac_Man_DesignPatterns.Menu;
 
 namespace Pac_Man_DesignPatterns.Game
 {
@@ -80,6 +81,8 @@ namespace Pac_Man_DesignPatterns.Game
 
         public Dictionary<TexturesEnum, string> aDictionaryTexturePaths;
 
+        private Menu.Menu aMenuDelete;
+
         public Game()
         {
             aGraphics = new GraphicsDeviceManager(this);
@@ -103,6 +106,8 @@ namespace Pac_Man_DesignPatterns.Game
             aArrayRandomTiles = new Vector2[4];
 
             aDictionaryTexturePaths = new Dictionary<TexturesEnum, string>();
+
+           
 
         }
 
@@ -171,6 +176,10 @@ namespace Pac_Man_DesignPatterns.Game
 
             aUIManager = new UIManager(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, aYOffset), aLevelDirector.TilesScale, GraphicsDevice);
 
+            MenuItem test1 = new PlayButton("Play");
+            MenuItem test2 = new QuitButton("Quit");
+            aMenuDelete = new Menu.Menu(GraphicsDevice, Color.Purple, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight, new MenuItem[] { test1, test2 });
+
             base.Initialize();
         }
 
@@ -192,6 +201,8 @@ namespace Pac_Man_DesignPatterns.Game
 
             aSpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            
+
             aDebugWallTexture = Content.Load<Texture2D>(aDictionaryTexturePaths[TexturesEnum.WALL]);
 
             foreach (var itemMazeEntity in aLevelMaze.GetAllEntities())
@@ -209,8 +220,7 @@ namespace Pac_Man_DesignPatterns.Game
             aPacMan.RegisterObserver(aUIManager);
             aPacMan.RegisterObserver(this);
 
-
-
+            aMenuDelete.Load(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -258,6 +268,8 @@ namespace Pac_Man_DesignPatterns.Game
 
             ControlEntityMovement(parGameTime: gameTime);
 
+            aMenuDelete.Update();
+
             aSpriteBatch.End();
 
             // TODO: Add your update logic here
@@ -269,7 +281,9 @@ namespace Pac_Man_DesignPatterns.Game
         {
             GraphicsDevice.Clear(Color.Black);
 
-            aSpriteBatch.Begin();
+            aSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null);
+
+           
 
             aUIManager.Draw(aSpriteBatch);
 
@@ -315,6 +329,7 @@ namespace Pac_Man_DesignPatterns.Game
                 }
             }
 
+            aMenuDelete.Draw(aSpriteBatch);
 
             aSpriteBatch.End();
 
@@ -401,6 +416,13 @@ namespace Pac_Man_DesignPatterns.Game
         public Vector2 GetOtherGhostPositionForCyan()
         {
             return aEntityArray[1].Position;
+        }
+
+        public Vector2 GetMazeWidth()
+        {
+           int tmpX = (int)(aLevelDirector.TilesScale * aMazeSizeVector.X);
+           int tmpY = (int)(aLevelDirector.TilesScale * aMazeSizeVector.Y);
+           return new Vector2(tmpX, tmpY);
         }
     }
 }

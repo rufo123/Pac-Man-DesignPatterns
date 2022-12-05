@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.Entities.MovableEntity;
 
 namespace Pac_Man_DesignPatterns.Game
 {
@@ -60,8 +61,34 @@ namespace Pac_Man_DesignPatterns.Game
                 return true;
             }
 
-           
             return false;
+        }
+
+        public void EdgeTeleporter(int parMazeWidth, int parMazeHeight, Entity parEntity)
+        {
+            // Teleport To The Right
+            if (parEntity.Position.X <= 0)
+            {
+                parEntity.Position = new Vector2(parMazeWidth - parEntity.Size, parEntity.Position.Y);
+            }
+
+            // Teleport To The Left
+            if (parEntity.Position.X >= parMazeWidth)
+            {
+                parEntity.Position = new Vector2(0, parEntity.Position.Y);
+            }
+
+            // Teleport To The Up
+            if (parEntity.Position.Y >= parMazeHeight)
+            {
+                parEntity.Position = new Vector2(parEntity.Position.X, 0);
+            }
+
+            // Teleport To The Down
+            if (parEntity.Position.Y <= 0)
+            {
+                parEntity.Position = new Vector2(parEntity.Position.X, parEntity.Position.Y - parEntity.Size);
+            }
         }
     }
 }

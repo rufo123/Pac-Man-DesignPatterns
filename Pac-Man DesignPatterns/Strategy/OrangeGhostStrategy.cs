@@ -9,7 +9,7 @@ using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
 
 namespace Pac_Man_DesignPatterns.Strategy
 {
-    internal class OrangeGhostStrategy : IGhostStrategy
+    public class OrangeGhostStrategy : IGhostStrategy
     {
 
         private Ghost aGhostMe;

@@ -255,6 +255,9 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
 
             aGhostState.Update(parGameTime);
             Move(parGameTime);
+
+            aCollisionDetector.EdgeTeleporter((int)GameManager.GetInstance().Game.GetMazeWidth().X, (int)GameManager.GetInstance().Game.GetMazeWidth().Y, this);
+
             base.Update(parGameTime);
         }
 

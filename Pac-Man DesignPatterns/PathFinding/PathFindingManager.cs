@@ -23,6 +23,8 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
         private readonly int aTilesScale;
 
+        private int[,] aAdjMatrix;
+
 
 
         public PathFindingManager(int parMazeWidth, int parMazeHeight, Entity[] parListWallEntities, int parTilesScale)
@@ -48,10 +50,53 @@ namespace Pac_Man_DesignPatterns.PathFinding
                 this.aMazeGraph[tmpX, tmpY] = -1;
             }
 
+            ConstructAdjMatrix(aMazeGraph);
         }
+
+        private void ConstructAdjMatrix(int[,] parOriginalMatrix)
+        {
+
+            int tmpWidth = parOriginalMatrix.GetLength(0);
+            int tmpHeight = parOriginalMatrix.GetLength(1);
+
+            int n = tmpWidth;
+            int m = tmpHeight;
+
+            int[,] tmpAdj = new int[tmpWidth * tmpHeight, tmpWidth * tmpHeight];
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (parOriginalMatrix[i, j] > -1)
+                    {
+
+                        int x = (i - 1 < 0) ? n - 1 : i - 1;
+                        int y = (i + 1 > n - 1) ? 0 : i + 1;
+                        int z = (j - 1 < 0) ? m - 1 : j - 1;
+                        int w = (j + 1 > m - 1) ? 0 : j + 1;
+
+                        if (parOriginalMatrix[x, j] > 0) tmpAdj[i * m + j, x * m + j] = 1;
+                        if (parOriginalMatrix[y, j] > 0) tmpAdj[i * m + j, y * m + j] = 1;
+                        if (parOriginalMatrix[i, z] > 0) tmpAdj[i * m + j, i * m + z] = 1;
+                        if (parOriginalMatrix[i, w] > 0) tmpAdj[i * m + j, i * m + w] = 1;
+
+                    }
+                }
+            }
+            //printMatrix(tmpAdj);
+
+            aAdjMatrix = tmpAdj;
+        }
+
+
 
         public int[] GetShortestPath(Vector2 parSource, IPathFindingAlgorithm pathFindingAlgorithm)
         {
+            if (aAdjMatrix is null)
+            {
+                throw new NullReferenceException("Adjacency Matrix Is Not Constructed!");
+            }
 
             int tmpConvX = ((int)parSource.X / aTilesScale) % aMazeWidth;
             int tmpConvY = ((int)parSource.Y / aTilesScale) % aMazeHeight;
@@ -60,7 +105,7 @@ namespace Pac_Man_DesignPatterns.PathFinding
             {
                 if (tmpConvY > 0 && tmpConvY < aMazeHeight)
                 {
-                    return pathFindingAlgorithm.FindShortestPath(aMazeGraph, (tmpConvY) + (tmpConvX * aMazeHeight));
+                    return pathFindingAlgorithm.FindShortestPath(aAdjMatrix, (tmpConvY) + (tmpConvX * aMazeHeight));
                 }
             }
 
@@ -118,6 +163,44 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
             return tmpVectorArray;
 
+        }
+
+        private int[,] ReturnAdjMatrix(int[,] originalMatrix, int parWidth, int parHeight)
+        {
+
+
+
+            parWidth = originalMatrix.GetLength(0);
+            parHeight = originalMatrix.GetLength(1);
+
+            int n = parWidth;
+            int m = parHeight;
+
+            int[,] tmpAdj = new int[parWidth * parHeight, parWidth * parHeight];
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (originalMatrix[i, j] > -1)
+                    {
+
+                        int x = (i - 1 < 0) ? n - 1 : i - 1;
+                        int y = (i + 1 > n - 1) ? 0 : i + 1;
+                        int z = (j - 1 < 0) ? m - 1 : j - 1;
+                        int w = (j + 1 > m - 1) ? 0 : j + 1;
+
+                        if (originalMatrix[x, j] > 0) tmpAdj[i * m + j, x * m + j] = 1;
+                        if (originalMatrix[y, j] > 0) tmpAdj[i * m + j, y * m + j] = 1;
+                        if (originalMatrix[i, z] > 0) tmpAdj[i * m + j, i * m + z] = 1;
+                        if (originalMatrix[i, w] > 0) tmpAdj[i * m + j, i * m + w] = 1;
+
+                    }
+                }
+            }
+            //printMatrix(tmpAdj);
+
+            return tmpAdj;
         }
 
 

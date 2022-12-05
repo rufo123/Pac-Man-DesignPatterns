@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pac_Man_DesignPatterns.Command;
 
 namespace Pac_Man_DesignPatterns.Menu
 {
-    public abstract class MenuItem
+    public abstract class MenuItem : ICommand
     {
-#pragma warning disable CS0169
         private string aText;
-#pragma warning restore CS0169
+
+        public string Text => aText;
 
         public MenuManager MenuManager
         {
@@ -23,6 +24,11 @@ namespace Pac_Man_DesignPatterns.Menu
         protected MenuItem(string parText)
         {
             aText = parText;
+        }
+
+        public virtual void Execute()
+        {
+           
         }
     }
 }

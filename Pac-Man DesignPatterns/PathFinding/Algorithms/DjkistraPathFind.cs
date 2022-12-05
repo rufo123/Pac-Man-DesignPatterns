@@ -17,12 +17,10 @@ namespace Pac_Man_DesignPatterns.PathFinding.Algorithms
         private const int INFINITY = -1;
         private const int UNDEFINED = -1;
 
-        public int[] FindShortestPath(int[,] parMazeGraph, int parSource)
+        public int[] FindShortestPath(int[,] parAdjMatrix, int parSource)
         {
 
-            int[,] tmpAdjGraph = ReturnAdjMatrix(parMazeGraph, parMazeGraph.GetLength(0), parMazeGraph.GetLength(1));
-
-            int tmpCountOfVertices = tmpAdjGraph.GetLength(0);
+            int tmpCountOfVertices = parAdjMatrix.GetLength(0);
             int[] tmpDist = new int[tmpCountOfVertices];
             int[] tmpPrev = new int[tmpCountOfVertices];
 
@@ -46,10 +44,10 @@ namespace Pac_Man_DesignPatterns.PathFinding.Algorithms
 
                 for (int v = 0; v < tmpCountOfVertices; v++)
                 {
-                    if (!tmpSpSet[v] && tmpAdjGraph[u, v] != 0 && tmpDist[u] != int.MaxValue && tmpDist[u] + tmpAdjGraph[u, v] < tmpDist[v])
+                    if (!tmpSpSet[v] && parAdjMatrix[u, v] != 0 && tmpDist[u] != int.MaxValue && tmpDist[u] + parAdjMatrix[u, v] < tmpDist[v])
                     {
-                        tmpDist[v] = tmpDist[u] + tmpAdjGraph[u,v];
-                        tmpPrev[v] = u; 
+                        tmpDist[v] = tmpDist[u] + parAdjMatrix[u, v];
+                        tmpPrev[v] = u;
                     }
 
 
@@ -60,42 +58,6 @@ namespace Pac_Man_DesignPatterns.PathFinding.Algorithms
 
             return tmpPrev;
 
-        }
-
-        private int[,] ReturnAdjMatrix(int[,] originalMatrix, int parWidth, int parHeight) {
-
-
-
-            parWidth = originalMatrix.GetLength(0);
-            parHeight = originalMatrix.GetLength(1);
-
-            int n = parWidth;
-            int m = parHeight;
-
-            int[,] tmpAdj = new int[parWidth * parHeight, parWidth * parHeight];
-
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < m; j++)
-                {
-                    if (originalMatrix[i, j] > -1) {
-
-                        int x = (i - 1 < 0) ? n - 1 : i - 1;
-                        int y = (i + 1 > n - 1) ? 0 : i + 1;
-                        int z = (j - 1 < 0) ? m - 1 : j - 1;
-                        int w = (j + 1 > m - 1) ? 0 : j + 1;
-
-                        if (originalMatrix[x,j] > 0) tmpAdj[i * m + j,x * m + j] = 1;
-                        if (originalMatrix[y,j] > 0) tmpAdj[i * m + j,y * m + j] = 1;
-                        if (originalMatrix[i,z] > 0) tmpAdj[i * m + j,i * m + z] = 1;
-                        if (originalMatrix[i,w] > 0) tmpAdj[i * m + j,i * m + w] = 1;
-
-                    }
-                }
-            }
-            //printMatrix(tmpAdj);
-
-            return tmpAdj;
         }
 
         void printMatrix(int[,] parAdj)

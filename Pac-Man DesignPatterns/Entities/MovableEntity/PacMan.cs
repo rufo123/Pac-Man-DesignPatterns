@@ -134,6 +134,8 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
                 //Debug.WriteLine(tmpIsCollisionDetected);
                 Move(parGameTime);
+
+                aCollisionDetector.EdgeTeleporter((int)GameManager.GetInstance().Game.GetMazeWidth().X, (int)GameManager.GetInstance().Game.GetMazeWidth().Y, this);
             }
 
             base.Update(parGameTime);
