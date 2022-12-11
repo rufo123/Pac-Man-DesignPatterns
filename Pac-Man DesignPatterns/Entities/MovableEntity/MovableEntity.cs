@@ -1,19 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.State;
-using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.Command;
 using Pac_Man_DesignPatterns.State.MovableEntity;
+using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 {
-    public abstract class MovableEntity : Entity
+    public abstract class MovableEntity : Entity, ICommandReSpawn
     {
         private Direction aDirection;
 
@@ -38,13 +33,16 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
         private readonly float aSpeed;
         private readonly float aDefaultSpeed;
 
+        private readonly Vector2 aSpawnPoint;
+
 
         protected MovableEntity(string parTexturePath, int parPositionX, int parPositionY, int parSize, bool parControlledByUser, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize, parColor)
         {
-            this.aControlledByUser = parControlledByUser;
+            aControlledByUser = parControlledByUser;
             aPixelsToMove = 64;
             aSpeed =  1;
             aDefaultSpeed = aSpeed;
+            aSpawnPoint = new Vector2(parPositionX, parPositionY);
             InitStates();
         }
 
@@ -66,19 +64,13 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
         public bool ControlledByUser => aControlledByUser;
 
-        public Direction Direction
-        {
-            get => aDirection;
-        }
+        public Direction Direction => aDirection;
 
-        public Direction EnqueuedDirection
-        {
-            get => aEnqueuedDirection;
-        }
+        public Direction EnqueuedDirection => aEnqueuedDirection;
 
         public void ChangeDirection(Direction parDirection)
         {
-            if (parDirection != Direction.NOTHING)
+            if (parDirection != Direction.Nothing)
             {
                 aEnqueuedDirection = parDirection;
             }
@@ -122,7 +114,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             {
                 
 
-                if (aDirection != Direction.NOTHING)
+                if (aDirection != Direction.Nothing)
                 {
                     aMovableState.Move(aDirection, parGameTime, aPixelsToMove);
                 }
@@ -135,16 +127,16 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
                 switch (aDirection)
                 {
-                    case Direction.NOTHING:
+                    case Direction.Nothing:
                         break;
-                    case Direction.UP:
+                    case Direction.Up:
                         if (Position.Y % Size != 0)
                         {
                             Position = new Vector2(Position.X, (int)(Position.Y - (Position.Y % Size)));
                         }
                         AdjustPositionY(false);
                         break;
-                    case Direction.DOWN:
+                    case Direction.Down:
                         if (Position.Y % Size != 0 && Position.Y % Size <= 1)
                         {
                             Position = new Vector2(Position.X, (int)(Position.Y - (Position.Y % Size)));
@@ -157,14 +149,14 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
                         AdjustPositionY(true);
 
                         break;
-                    case Direction.LEFT:
+                    case Direction.Left:
                         if (Position.X % Size != 0)
                         {
                             Position = new Vector2((int)(Position.X - (Position.X % Size)), Position.Y);
                         }
                         AdjustPositionX(false);
                         break;
-                    case Direction.RIGHT:
+                    case Direction.Right:
                         if (Position.X % Size != 0 && Position.X % Size <= 1)
                         {
                             Position = new Vector2((int)(Position.X - (Position.X % Size)), Position.Y);
@@ -184,7 +176,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
         public void ChangeEnqueuedDirectionToDirection()
         {
 
-            if (aEnqueuedDirection != Direction.NOTHING)
+            if (aEnqueuedDirection != Direction.Nothing)
             {
                 aMovableState.ChangeState(aEnqueuedDirection);
             }
@@ -197,13 +189,13 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 
             switch (parDirection)
             {
-                case Direction.UP:
+                case Direction.Up:
                     return new Rectangle((int)Position.X, (int)Position.Y - (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), Size, Size);
-                case Direction.DOWN:
+                case Direction.Down:
                     return new Rectangle((int)Position.X, (int)Position.Y + (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), Size, Size);
-                case Direction.LEFT:
+                case Direction.Left:
                     return new Rectangle((int)Position.X - (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), (int)Position.Y, Size, Size);
-                case Direction.RIGHT:
+                case Direction.Right:
                     return new Rectangle((int)Position.X + (int)Math.Round((GetSpeed() * aPixelsToMove) * deltaTime), (int)Position.Y, Size, Size);
                 default:
                     return GetRectangleHitBox();
@@ -216,22 +208,22 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
         {
             switch (parDirection)
             {
-                case Direction.UP:
+                case Direction.Up:
                     aMovableState = aMovableStateUp;
                     break;
-                case Direction.DOWN:
+                case Direction.Down:
                     aMovableState = aMovableStateDown;
                     break;
-                case Direction.LEFT:
+                case Direction.Left:
                     aMovableState = aMovableStateLeft;
                     break;
-                case Direction.RIGHT:
+                case Direction.Right:
                     aMovableState = aMovableStateRight;
                     break;
             }
 
             aDirection = parDirection;
-            aEnqueuedDirection = Direction.NOTHING;
+            aEnqueuedDirection = Direction.Nothing;
         }
 
         public override float GetRotation()
@@ -254,5 +246,9 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             return aDefaultSpeed;
         }
 
+        public virtual void ReSpawn()
+        {
+            Position = aSpawnPoint;
+        }
     }
 }

@@ -1,23 +1,19 @@
-﻿using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.State.PacMan;
+using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Game
 {
     public sealed class GameManager : IObserver
     {
-        public int aGameWidth;
-        public int aGameHeight;
 
         private static GameManager _staticGameManager;
 
         public static GameManager GetInstance()
         {
 
+            // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
             if (_staticGameManager == null)
             {
                 _staticGameManager = new GameManager();
@@ -26,73 +22,11 @@ namespace Pac_Man_DesignPatterns.Game
             return _staticGameManager;
         }
 
-        public Game Game { get; }
+        private Game Game { get; }
 
         private GameManager()
         {
             Game = new Game();
-        }
-
-        public Level.LevelDirector LevelDirector
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Level.ILevelBuilder ILevelBuilder
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Level.IMazeProduct IMazeProduct
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-
-        public UIManager UIManager
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public KeyHandler KeyHandler
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Utils.IObserver Implementation
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        internal Menu.MenuManager MenuManager
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public void GetInput(KeyHandler parKey)
-        {
-
         }
 
         public void Update(Message parMessage)
@@ -100,13 +34,10 @@ namespace Pac_Man_DesignPatterns.Game
             switch (parMessage.MessageCode)
             {
                 case MessageCodes.CookieEaten:
-                    //Cosi
                     if (parMessage.ACommand is not null)
                     {
                         parMessage.ACommand.Execute();
                     }
-                    break;
-                default:
                     break;
             }
         }
@@ -118,17 +49,95 @@ namespace Pac_Man_DesignPatterns.Game
 
         public Vector2 GetRandomTile(int parIndex)
         {
-           return Game.GetRandomTile(parIndex);
+            return Game.GetRandomTile(parIndex);
         }
 
-        public void ReSpawnPacMan()
+        public void KillPacMan()
         {
-            Game.PacMan.SeatDead();
+            Game.PacMan.ChangeState(PacManStateEnum.Dead);
+        }
+
+        public PacManStateEnum GetPacManState()
+        {
+            return Game.PacMan.GetState();
         }
 
         public Vector2 GetOtherGhostPositionForCyan()
         {
             return Game.GetOtherGhostPositionForCyan();
+        }
+
+        public void StartGame()
+        {
+            Game.GameState = GameState.Playing;
+            Game.RestartGame();
+        }
+
+
+        public GraphicsDevice GetGraphicDevice()
+        {
+            return Game.GraphicsDevice;
+        }
+
+        public Vector2 GetMazeWidth()
+        {
+            return Game.GetMazeWidth();
+        }
+
+        public void RunGame()
+        {
+            Game.Run();
+        }
+
+        public Vector2 GetPacManPosition()
+        {
+            return Game.PacMan.Position;
+        }
+
+        public Direction GetPacManDirection()
+        {
+            return Game.PacMan.Direction;
+        }
+
+        public int GetPacManSize()
+        {
+            return Game.PacMan.Size;
+        }
+
+        public Vector2 GetScatterPointPositionByIndex(int parIndex)
+        {
+            int tmpIndex = parIndex;
+
+            while (tmpIndex != -1)
+            {
+                if (Game.ScatterPoints.Length >= parIndex + 1)
+                {
+                    return Game.ScatterPoints[tmpIndex].Position;
+                }
+                tmpIndex--;
+            }
+
+            return Vector2.Zero;
+        }
+
+        public void ExitGame()
+        {
+            Game.Exit();
+        }
+
+        public void GetGraphicDeviceSamplerState(SamplerState parSamplerState)
+        {
+            Game.GraphicsDevice.SamplerStates[0] = parSamplerState;
+        }
+
+        public void AddScore(int parScore)
+        {
+            Game.UiManager.AddScore(parScore);
+        }
+
+        public void TakeLives(int parNumberOfLives)
+        {
+            Game.UiManager.TakeLives(parNumberOfLives);
         }
     }
 }

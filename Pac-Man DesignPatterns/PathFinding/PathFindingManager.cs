@@ -1,12 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
-using Pac_Man_DesignPatterns.PathFinding.Algorithms;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Entities;
 
 namespace Pac_Man_DesignPatterns.PathFinding
@@ -19,8 +13,6 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
         private readonly int aMazeHeight;
 
-        private readonly int[,] aMazeGraph;
-
         private readonly int aTilesScale;
 
         private int[,] aAdjMatrix;
@@ -29,16 +21,16 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
         public PathFindingManager(int parMazeWidth, int parMazeHeight, Entity[] parListWallEntities, int parTilesScale)
         {
-            this.aMazeWidth = parMazeWidth;
-            this.aMazeHeight = parMazeHeight;
-            this.aMazeGraph = new int[parMazeWidth, parMazeHeight];
-            this.aTilesScale = parTilesScale;
+            aMazeWidth = parMazeWidth;
+            aMazeHeight = parMazeHeight;
+            int[,] tmpMazeGraph = new int[parMazeWidth, parMazeHeight];
+            aTilesScale = parTilesScale;
 
-            for (int i = 0; i < aMazeGraph.GetLength(0); i++)
+            for (int i = 0; i < tmpMazeGraph.GetLength(0); i++)
             {
-                for (int j = 0; j < aMazeGraph.GetLength(1); j++)
+                for (int j = 0; j < tmpMazeGraph.GetLength(1); j++)
                 {
-                    aMazeGraph[i, j] = 1;
+                    tmpMazeGraph[i, j] = 1;
                 }
             }
 
@@ -47,10 +39,10 @@ namespace Pac_Man_DesignPatterns.PathFinding
                 int tmpX = (int)(entity.Position.X / aTilesScale);
                 int tmpY = (int)(entity.Position.Y / aTilesScale);
 
-                this.aMazeGraph[tmpX, tmpY] = -1;
+                tmpMazeGraph[tmpX, tmpY] = -1;
             }
 
-            ConstructAdjMatrix(aMazeGraph);
+            ConstructAdjMatrix(tmpMazeGraph);
         }
 
         private void ConstructAdjMatrix(int[,] parOriginalMatrix)
@@ -91,7 +83,7 @@ namespace Pac_Man_DesignPatterns.PathFinding
 
 
 
-        public int[] GetShortestPath(Vector2 parSource, IPathFindingAlgorithm pathFindingAlgorithm)
+        public int[] GetShortestPath(Vector2 parSource, IPathFindingAlgorithm parPathFindingAlgorithm)
         {
             if (aAdjMatrix is null)
             {
@@ -105,7 +97,7 @@ namespace Pac_Man_DesignPatterns.PathFinding
             {
                 if (tmpConvY > 0 && tmpConvY < aMazeHeight)
                 {
-                    return pathFindingAlgorithm.FindShortestPath(aAdjMatrix, (tmpConvY) + (tmpConvX * aMazeHeight));
+                    return parPathFindingAlgorithm.FindShortestPath(aAdjMatrix, (tmpConvY) + (tmpConvX * aMazeHeight));
                 }
             }
 
@@ -118,11 +110,11 @@ namespace Pac_Man_DesignPatterns.PathFinding
             int tmpConvX = ((int)parTarget.X / aTilesScale) % aMazeWidth;
             int tmpConvY = ((int)parTarget.Y / aTilesScale) % aMazeHeight;
 
-            int parTargetNode = (tmpConvY) + (tmpConvX * aMazeHeight);
+            int tmpTargetNode = (tmpConvY) + (tmpConvX * aMazeHeight);
 
             List<int> tmpConstructedPath = new List<int>();
 
-            int tmpHelperTarget = parTargetNode;
+            int tmpHelperTarget = tmpTargetNode;
 
            // tmpConstructedPath.Add(parTargetNode);
 
@@ -139,72 +131,21 @@ namespace Pac_Man_DesignPatterns.PathFinding
             return tmpConstructedPath.ToArray();
         }
 
-        public Vector2 ConvertTargetIdToVector(int parTarget) {
-
-            int parPositionX = ((parTarget / aMazeHeight)) * aTilesScale;
-            int parPositionY = (parTarget % aMazeHeight) * aTilesScale;
-
-            Debug.WriteLine(parTarget);
-
-            return new Vector2(parPositionX, parPositionY);
-        }
-
         public Vector2[] ConvertTargetIdsToVectorArray(int[] parTarget)
         {
             Vector2[] tmpVectorArray = new Vector2[parTarget.Length];
 
             for (int i = 0; i < parTarget.Length; i++)
             {
-                int parPositionX = ((parTarget[i] / aMazeHeight)) * aTilesScale;
-                int parPositionY = (parTarget[i] % aMazeHeight) * aTilesScale;
+                int tmpPositionX = ((parTarget[i] / aMazeHeight)) * aTilesScale;
+                int tmpPositionY = (parTarget[i] % aMazeHeight) * aTilesScale;
 
-                tmpVectorArray[i] = new Vector2(parPositionX, parPositionY);
+                tmpVectorArray[i] = new Vector2(tmpPositionX, tmpPositionY);
             }
 
             return tmpVectorArray;
 
         }
-
-        private int[,] ReturnAdjMatrix(int[,] originalMatrix, int parWidth, int parHeight)
-        {
-
-
-
-            parWidth = originalMatrix.GetLength(0);
-            parHeight = originalMatrix.GetLength(1);
-
-            int n = parWidth;
-            int m = parHeight;
-
-            int[,] tmpAdj = new int[parWidth * parHeight, parWidth * parHeight];
-
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < m; j++)
-                {
-                    if (originalMatrix[i, j] > -1)
-                    {
-
-                        int x = (i - 1 < 0) ? n - 1 : i - 1;
-                        int y = (i + 1 > n - 1) ? 0 : i + 1;
-                        int z = (j - 1 < 0) ? m - 1 : j - 1;
-                        int w = (j + 1 > m - 1) ? 0 : j + 1;
-
-                        if (originalMatrix[x, j] > 0) tmpAdj[i * m + j, x * m + j] = 1;
-                        if (originalMatrix[y, j] > 0) tmpAdj[i * m + j, y * m + j] = 1;
-                        if (originalMatrix[i, z] > 0) tmpAdj[i * m + j, i * m + z] = 1;
-                        if (originalMatrix[i, w] > 0) tmpAdj[i * m + j, i * m + w] = 1;
-
-                    }
-                }
-            }
-            //printMatrix(tmpAdj);
-
-            return tmpAdj;
-        }
-
-
-
     }
 }
 

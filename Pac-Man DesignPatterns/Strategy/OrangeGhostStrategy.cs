@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pac_Man_DesignPatterns.Game;
 using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
+using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Strategy
 {
@@ -15,14 +10,6 @@ namespace Pac_Man_DesignPatterns.Strategy
         private Ghost aGhostMe;
 
 
-        internal IGhostStrategy IGhostStrategy
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         public void SetGhostToStrategy(Ghost parGhost)
         {
             aGhostMe = parGhost;
@@ -31,17 +18,17 @@ namespace Pac_Man_DesignPatterns.Strategy
 
         public Vector2 GetChaseTilePos()
         {
-            if (Vector2.Distance(GameManager.GetInstance().Game.PacMan.Position, aGhostMe.Position) > 8 * aGhostMe.Size)
+            if (Vector2.Distance(GameManager.GetInstance().GetPacManPosition(), aGhostMe.Position) > 8 * aGhostMe.Size)
             {
                 return GetScatterTilePos();
             }
 
-            return GameManager.GetInstance().Game.PacMan.Position;
+            return GameManager.GetInstance().GetPacManPosition();
         }
 
         public Vector2 GetScatterTilePos()
         {
-            return GameManager.GetInstance().Game.ScatterPoints[3].Position;
+            return GameManager.GetInstance().GetScatterPointPositionByIndex(3);
         }
     }
 }

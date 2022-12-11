@@ -1,164 +1,56 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Game;
-using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
 using Pac_Man_DesignPatterns.Entities.TileEntity;
+using Pac_Man_DesignPatterns.Game;
+using Pac_Man_DesignPatterns.State.PacMan;
+using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Entities.MovableEntity
 {
     public class PacMan : MovableEntity, IObservable
     {
-        private bool aIsDead;
-
-        private double aDeadTimer;
-
-        private readonly int aDeadTimerThreshold;
 
         private readonly IList<IObserver> aListObservers;
 
         private readonly CollisionDetector aCollisionDetector;
 
-        public Utils.IObservable Implementation
+        private PacManStateAbs aPacManState;
+        private PacManStateAbs aPacManAliveState;
+        private PacManStateAbs aPacManDeadState;
+
+        public new bool IsHidden
         {
-            get => default;
-            set
-            {
-            }
+            get => aIsHidden;
+            set => aIsHidden = value;
         }
 
-        public IObserver IObserver { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public GameManager GameManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public UIManager UIManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public CollisionDetector CollisionDetector => aCollisionDetector;
+
 
         public PacMan(string parTexturePath, int parPositionX, int parPositionY, int parSize, CollisionDetector parCollisionDetector, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize, true, parColor)
         {
             aListObservers = new List<IObserver>();
             aCollisionDetector = parCollisionDetector;
-            aIsDead = false;
-            aDeadTimer = -1;
-            aDeadTimerThreshold = 3;
+            InitStates();
+        }
+
+        private void InitStates()
+        {
+            aPacManAliveState = new PacManAliveState(this);
+            aPacManDeadState = new PacManDeadState(this);
+
+            aPacManState = aPacManAliveState;
         }
 
         public override void Update(GameTime parGameTime)
         {
-
-            if (aIsDead)
-            {
-                DeadLogic(parGameTime);
-            }
-
-            if (!aIsDead)
-            {
-                aCollisionDetector.DetectCollision(this.PredictRectangleNextPos(parGameTime, this.EnqueuedDirection), out Entity[] tmpEntityCollidedWithEveryTick);
-
-                if (tmpEntityCollidedWithEveryTick is not null)
-                {
-                    for (int i = 0; i < tmpEntityCollidedWithEveryTick.Length; i++)
-                    {
-                        if (tmpEntityCollidedWithEveryTick[i] is Food && !((Food)tmpEntityCollidedWithEveryTick[i]).IsHidden)
-                        {
-                            FoodEaten((Food)tmpEntityCollidedWithEveryTick[i]);
-                        }
-
-                        if (tmpEntityCollidedWithEveryTick[i] is Ghost)
-                        {
-                            GhostCollision((Ghost)tmpEntityCollidedWithEveryTick[i]);
-                        }
-                    }
-                }
-
-
-                if (this.EnqueuedDirection != Direction.NOTHING)
-                {
-
-                    bool tmpCollided = aCollisionDetector.DetectCollision(this.PredictRectangleNextPos(parGameTime, this.EnqueuedDirection), out Entity[] tmpEntityCollidedWith);
-
-                    if (!tmpCollided || tmpEntityCollidedWith is null)
-                    {
-                        this.ChangeEnqueuedDirectionToDirection();
-                    }
-
-                    if (tmpEntityCollidedWith is not null)
-                    {
-                        bool tmpShouldBeStopped = false;
-
-                        for (int i = 0; i < tmpEntityCollidedWith.Length; i++)
-                        {
-                            if (tmpEntityCollidedWith[i] is Wall)
-                            {
-                                tmpShouldBeStopped = true;
-                            }
-
-                        }
-
-                        if (!tmpShouldBeStopped)
-                        {
-                            this.ChangeEnqueuedDirectionToDirection();
-                        }
-                    }
-
-                }
-
-                aCollisionDetector.DetectCollision(this.PredictRectangleNextPos(parGameTime, this.Direction), out Entity[] tmpEntityCollidedWithNext);
-
-
-                if (tmpEntityCollidedWithNext is not null)
-                {
-                    bool tmpShouldBeStopped = false;
-
-                    for (int i = 0; i < tmpEntityCollidedWithNext.Length; i++)
-                    {
-                        if (tmpEntityCollidedWithNext[i] is Wall)
-                        {
-                            tmpShouldBeStopped = true;
-                        }
-
-                    }
-
-                    if (tmpShouldBeStopped)
-                    {
-                        this.IsBlocked = true;
-                    }
-                    else
-                    {
-                        this.IsBlocked = false;
-                    }
-                }
-
-
-                //Debug.WriteLine(tmpIsCollisionDetected);
-                Move(parGameTime);
-
-                aCollisionDetector.EdgeTeleporter((int)GameManager.GetInstance().Game.GetMazeWidth().X, (int)GameManager.GetInstance().Game.GetMazeWidth().Y, this);
-            }
+            aPacManState.Update(parGameTime);
 
             base.Update(parGameTime);
         }
 
-        public void DeadLogic(GameTime parGameTime)
-        {
-            if (aIsDead)
-            {
-                aDeadTimer += parGameTime.ElapsedGameTime.TotalSeconds;
-
-                if (aDeadTimer > aDeadTimerThreshold)
-                {
-                    aIsDead = false;
-                    aDeadTimer = 0;
-                }
-            }
-        }
-
-        public void SeatDead()
-        {
-            aIsDead = true;
-        }
 
         public void GhostCollision(Ghost parGhost)
         {
@@ -186,9 +78,35 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity
             aListObservers.Remove(parObserver);
         }
 
-        public void Notify()
+        public void ChangeState(PacManStateEnum parPacManStateEnum)
         {
-            throw new NotImplementedException();
+            switch (parPacManStateEnum)
+            {
+                case PacManStateEnum.Alive:
+                    aPacManState = aPacManAliveState;
+                    break;
+                case PacManStateEnum.Dead:
+                    aPacManState = aPacManDeadState;
+                    break;
+            }
+
+            aPacManState.ResetTimer();
+        }
+
+        public PacManStateEnum GetState()
+        {
+            if (aPacManState == aPacManAliveState)
+            {
+                return PacManStateEnum.Alive;
+            }
+
+            if (aPacManState == aPacManDeadState)
+            {
+                return PacManStateEnum.Dead;
+            }
+
+            // Cannot happen...
+            return PacManStateEnum.Alive;
         }
     }
 }

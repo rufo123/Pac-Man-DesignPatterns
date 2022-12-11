@@ -1,10 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Entities.TileEntity
 {
@@ -17,8 +12,8 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
         public override void Execute()
         {
             aIsHidden = true;
+            GameManager.GetInstance().AddScore(1);
             base.Execute();
-            // Dorobit, zatial vyhodi Exec z basu
         }
     }
 }

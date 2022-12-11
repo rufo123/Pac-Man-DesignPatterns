@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.State.Ghost
 {
@@ -17,8 +16,6 @@ namespace Pac_Man_DesignPatterns.State.Ghost
 
         protected int aTimerThreshold;
 
-        private string aAlternativeTexturePath;
-
         public int TimerThreshold => aTimerThreshold;
 
         public double Timer
@@ -27,11 +24,10 @@ namespace Pac_Man_DesignPatterns.State.Ghost
             set => aTimer = value;
         }
 
-        protected GhostStateAbs(Entities.MovableEntity.Ghosts.Ghost parGhost, string parAlternativeTexture = null)
+        protected GhostStateAbs(Entities.MovableEntity.Ghosts.Ghost parGhost)
         {
-            this.aGhost = parGhost;
-            this.aTimerThreshold = 10;
-            aAlternativeTexturePath = parAlternativeTexture;
+            aGhost = parGhost;
+            aTimerThreshold = 10;
         }
 
 
@@ -64,10 +60,6 @@ namespace Pac_Man_DesignPatterns.State.Ghost
         protected void InitTimer()
         {
             aTimer = 0;
-        }
-
-        public virtual void Initialize(Utilities parUtilities)
-        {
         }
 
         public virtual void Update(GameTime parGameTime)

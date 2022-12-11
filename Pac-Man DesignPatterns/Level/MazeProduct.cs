@@ -1,9 +1,4 @@
-﻿using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Entities;
 
@@ -14,8 +9,6 @@ namespace Pac_Man_DesignPatterns.Level
         private readonly List<Entity> aFood;
 
         private readonly List<Entity> aWalls;
-
-        private readonly List<Entity> aObjects;
 
         private readonly List<Entity> aGhostScatterPoints;
 
@@ -30,7 +23,6 @@ namespace Pac_Man_DesignPatterns.Level
         {
             aFood = new List<Entity>();
             aWalls = new List<Entity>();
-            aObjects = new List<Entity>();
             aGhostScatterPoints = new List<Entity>();
             aGhostHouse = new List<Entity>();
             aAllEntities = new List<Entity>();
@@ -43,12 +35,6 @@ namespace Pac_Man_DesignPatterns.Level
         {
             aFood.Add(parFood);
             aAllEntities.Add(parFood);
-        }
-
-        public void AddOtherObjects(Entity parObjects)
-        {
-            aObjects.Add(parObjects);
-            aAllEntities.Add(parObjects);
         }
 
         public void AddGhostHouse(Entity parGhostHouse)
@@ -80,11 +66,6 @@ namespace Pac_Man_DesignPatterns.Level
             return aGhostScatterPoints.ToArray();
         }
 
-        public Entity[] GetFinalProduct()
-        {
-            throw new NotImplementedException();
-        }
-
         public Entity[] GetFood()
         {
             return aFood.ToArray();
@@ -93,11 +74,6 @@ namespace Pac_Man_DesignPatterns.Level
         public Entity[] GetGhostHouse()
         {
             return aGhostHouse.ToArray();
-        }
-
-        public Entity[] GetOtherObjects()
-        {
-            return aObjects.ToArray();
         }
 
         public Entity[] GetWalls()

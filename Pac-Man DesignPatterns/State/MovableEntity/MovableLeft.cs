@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Pac_Man_DesignPatterns.Utils;
 
@@ -37,7 +32,7 @@ namespace Pac_Man_DesignPatterns.State.MovableEntity
         {
             if (!MovableEntity.ControlledByUser)
             {
-                if (parDirection != Direction.RIGHT || MovableEntity.IsBlocked)
+                if (parDirection != Direction.Right || MovableEntity.IsBlocked)
                 {
                     MovableEntity.ChangeMovableState(parDirection);
                     return true;

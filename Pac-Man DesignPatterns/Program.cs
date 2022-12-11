@@ -6,10 +6,10 @@ namespace Pac_Man_DesignPatterns;
 
 class Program
 {
-    public static void Main(string[] args)
+    public static void Main(string[] parArgs)
     {
         GameManager tmpGameManager = GameManager.GetInstance();
 
-        tmpGameManager.Game.Run();
+        tmpGameManager.RunGame();
     }
 }

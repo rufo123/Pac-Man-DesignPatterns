@@ -1,40 +1,58 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pac_Man_DesignPatterns.Game
 {
     public class KeyHandler
     {
-        public KeyHandler()
-        {
-        }
+        private KeyboardState aKeyBoardStateOld;
+        private KeyboardState aKeyBoardStateNew;
+
 
         public Direction GetKeyInput()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) || Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                return Direction.UP;
+                return Direction.Up;
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S) || Keyboard.GetState().IsKeyDown(Keys.Down))
+
+            if (Keyboard.GetState().IsKeyDown(Keys.S) || Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                return Direction.DOWN;
+                return Direction.Down;
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.A) || Keyboard.GetState().IsKeyDown(Keys.Left))
+
+            if (Keyboard.GetState().IsKeyDown(Keys.A) || Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                return Direction.LEFT;
+                return Direction.Left;
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D) || Keyboard.GetState().IsKeyDown(Keys.Right))
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D) || Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                return Direction.RIGHT;
+                return Direction.Right;
             }
-            else {
-                return Direction.NOTHING;
+
+            return Direction.Nothing;
+        }
+
+        public bool GetKeyInputPressed(Keys parKey)
+        {
+            bool tmpIsKeyPress = false;
+
+            aKeyBoardStateNew = Keyboard.GetState();
+
+            if (IsKeyDown(parKey))
+            {
+                tmpIsKeyPress = true;
             }
+
+            aKeyBoardStateOld = aKeyBoardStateNew;
+
+            return tmpIsKeyPress;
+        }
+
+        private bool IsKeyDown(Keys parKey)
+        {
+            return (aKeyBoardStateNew.IsKeyDown(parKey) && aKeyBoardStateOld.IsKeyUp(parKey));
         }
     }
 }

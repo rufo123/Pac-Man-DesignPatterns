@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
+using System.Numerics;
 using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Level;
@@ -13,11 +10,11 @@ public class LevelDirector
 {
     private readonly ILevelBuilder aBuilder;
 
-    private readonly List<BluePrint> aWallsBlueprint;
-    private readonly List<BluePrint> aGhostHouseBlueprint;
-    private readonly List<BluePrint> aFoodBlueprint;
-    private readonly List<BluePrint> aScatterPointsBlueprint;
-    private readonly List<BluePrint> aEmptySpacesBlueprint;
+    private List<BluePrint> aWallsBlueprint;
+    private List<BluePrint> aGhostHouseBlueprint;
+    private List<BluePrint> aFoodBlueprint;
+    private List<BluePrint> aScatterPointsBlueprint;
+    private List<BluePrint> aEmptySpacesBlueprint;
 
     private readonly int aTilesScale;
 
@@ -61,37 +58,37 @@ public class LevelDirector
 
                         //Neighbours UP
                         if ((tmpRow - 1 > -1 && tmpRow - 1 < tmpCharMatrix.GetLength(0)) && tmpCharMatrix[tmpRow - 1, tmpCol] != null && Int32.Parse((string)tmpCharMatrix.GetValue(tmpRow - 1, tmpCol)!).Equals((int)LevelMappings.Wall)) {
-                            tmpListNeighbours.Add(Direction.UP);
+                            tmpListNeighbours.Add(Direction.Up);
                         }
                         //Neighbours DOWN
                         if ((tmpRow + 1 > -1 && tmpRow + 1 < tmpCharMatrix.GetLength(0)) && tmpCharMatrix[tmpRow + 1, tmpCol] != null && Int32.Parse((string)tmpCharMatrix.GetValue(tmpRow + 1, tmpCol)!).Equals((int)LevelMappings.Wall))
                         {
-                            tmpListNeighbours.Add(Direction.DOWN);
+                            tmpListNeighbours.Add(Direction.Down);
                         }
                         //Neighbours LEFT
                         if ((tmpCol - 1 > -1 && tmpCol - 1 < tmpCharMatrix.GetLength(1)) && tmpCharMatrix[tmpRow ,tmpCol - 1] != null && Int32.Parse((string)tmpCharMatrix.GetValue(tmpRow, tmpCol - 1)!).Equals((int)LevelMappings.Wall))
                         {
-                            tmpListNeighbours.Add(Direction.LEFT);
+                            tmpListNeighbours.Add(Direction.Left);
                         }
                         //Neighbours RIGHT
                         if ((tmpCol + 1 > -1 && tmpCol + 1 < tmpCharMatrix.GetLength(1)) && tmpCharMatrix[tmpRow, tmpCol + 1] != null && Int32.Parse((string)tmpCharMatrix.GetValue(tmpRow, tmpCol + 1)!).Equals((int)LevelMappings.Wall))
                         {
-                            tmpListNeighbours.Add(Direction.RIGHT);
+                            tmpListNeighbours.Add(Direction.Right);
                         }
 
 
-                        aWallsBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0, tmpListNeighbours.ToArray()));
+                        aWallsBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale), tmpListNeighbours.ToArray()));
                         break;
                     case (int)LevelMappings.Cookie:
-                        aFoodBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0));
-                        aEmptySpacesBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0));
+                        aFoodBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale)));
+                        aEmptySpacesBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale)));
                         break;
                     case (int)LevelMappings.GhostHouse:
-                        aGhostHouseBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0));
+                        aGhostHouseBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale)));
                         break;
                     case (int)LevelMappings.ScatterPoint:
-                        aScatterPointsBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0));
-                        aEmptySpacesBlueprint.Add(new BluePrint(new System.Numerics.Vector2(tmpCol * parScale, tmpRow * parScale), 0));
+                        aScatterPointsBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale)));
+                        aEmptySpacesBlueprint.Add(new BluePrint(new Vector2(tmpCol * parScale, tmpRow * parScale)));
                         break;
                         
                 }
@@ -111,13 +108,18 @@ public class LevelDirector
 
     public LevelDirector(ILevelBuilder parLevelBuilder, int parTilesScale)
     {
+        InitLists();
+        aBuilder = parLevelBuilder;
+        aTilesScale = parTilesScale;
+    }
+
+    public void InitLists()
+    {
         aWallsBlueprint = new List<BluePrint>();
         aFoodBlueprint = new List<BluePrint>();
         aGhostHouseBlueprint = new List<BluePrint>();
         aScatterPointsBlueprint = new List<BluePrint>();
         aEmptySpacesBlueprint = new List<BluePrint>();
-        aBuilder = parLevelBuilder;
-        aTilesScale = parTilesScale;
     }
 
     public IMazeProduct CreateLevel()
@@ -131,14 +133,7 @@ public class LevelDirector
     }
 
 
-    public int TilesScale
-    {
-        get => aTilesScale;
-    }
-
-
-
-
+    public int TilesScale => aTilesScale;
 }
 
 public enum LevelMappings

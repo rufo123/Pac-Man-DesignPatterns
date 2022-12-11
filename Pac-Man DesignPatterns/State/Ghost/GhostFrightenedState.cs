@@ -28,18 +28,18 @@ namespace Pac_Man_DesignPatterns.State.Ghost
             {
                 return aGameManager.GetRandomTile(0);
             }
-            else if (Ghost is Cyan)
+
+            if (Ghost is Cyan)
             {
                 return aGameManager.GetRandomTile(1);
             }
-            else if (Ghost is Orange)
+
+            if (Ghost is Orange)
             {
                 return aGameManager.GetRandomTile(2);
             }
-            else
-            {
-                return aGameManager.GetRandomTile(3);
-            }
+
+            return aGameManager.GetRandomTile(3);
         }
 
         public override void ExecuteLogic()

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
 namespace Pac_Man_DesignPatterns.Utils
 {
     public interface IObservable
@@ -11,7 +7,5 @@ namespace Pac_Man_DesignPatterns.Utils
         public void RegisterObserver(IObserver parObserver);
 
         public void RemoveObserver(IObserver parObserver);
-
-        public void Notify();
     }
 }

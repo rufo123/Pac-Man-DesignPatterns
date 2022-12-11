@@ -1,24 +1,21 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pac_Man_DesignPatterns.Entities;
 using Pac_Man_DesignPatterns.Entities.MovableEntity;
 using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
+using Pac_Man_DesignPatterns.Entities.TileEntity;
 using Pac_Man_DesignPatterns.GhostFactory;
 using Pac_Man_DesignPatterns.Level;
+using Pac_Man_DesignPatterns.Menu;
 using Pac_Man_DesignPatterns.PathFinding;
 using Pac_Man_DesignPatterns.PathFinding.Algorithms;
 using Pac_Man_DesignPatterns.Utils;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Microsoft.Xna.Framework.Content;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
-using static System.Net.Mime.MediaTypeNames;
-using System.Reflection;
-using Pac_Man_DesignPatterns.Menu;
+
+// ReSharper disable StringLiteralTypo
 
 namespace Pac_Man_DesignPatterns.Game
 {
@@ -39,8 +36,6 @@ namespace Pac_Man_DesignPatterns.Game
         private CollisionDetector aCollisionDetectorWithGhosts;
 
         private readonly Random aRandom;
-
-        private readonly Random aRandomSeedGenerator;
 
         private readonly RedGhost aRedGhostFactory;
 
@@ -71,17 +66,29 @@ namespace Pac_Man_DesignPatterns.Game
 
         public Entity[] ScatterPoints => aScatterPoints;
 
-        private float aTimer = 0;
-
-        public GhostHouse GhostHouse => aGhostHouse;
+        private float aTimer;
 
         private Texture2D aDebugWallTexture;
 
         public Vector2[] ArrayRandomTiles => aArrayRandomTiles;
 
-        public Dictionary<TexturesEnum, string> aDictionaryTexturePaths;
+        private readonly string[] aArrayTexturePaths;
 
-        private Menu.Menu aMenuDelete;
+        private readonly MenuManager aMenuManager;
+
+        private GameState aEnumGameState;
+
+        private bool aDrawDebugPath;
+
+ 
+
+        public GameState GameState
+        {
+            get => aEnumGameState;
+            set => aEnumGameState = value;
+        }
+
+        public UIManager UiManager => aUIManager;
 
         public Game()
         {
@@ -95,8 +102,8 @@ namespace Pac_Man_DesignPatterns.Game
             aLevelBuilder = new LevelBuilder();
             aLevelDirector = new LevelDirector(aLevelBuilder, 24);
 
-            aRandomSeedGenerator = new Random();
-            aRandom = new Random(aRandomSeedGenerator.Next());
+            Random tmpRandomSeedGenerator = new Random();
+            aRandom = new Random(tmpRandomSeedGenerator.Next());
 
             aRedGhostFactory = new RedGhost();
             aPinkGhostFactory = new PinkGhost();
@@ -105,26 +112,13 @@ namespace Pac_Man_DesignPatterns.Game
 
             aArrayRandomTiles = new Vector2[4];
 
-            aDictionaryTexturePaths = new Dictionary<TexturesEnum, string>();
+            aArrayTexturePaths = new string[13];
 
-           
+            aEnumGameState = GameState.Menu;
 
-        }
+            aDrawDebugPath = false;
 
-        public GhostFactory.GhostFactory GhostFactory
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public GhostFactory.GhostFactory GhostFactory1
-        {
-            get => default;
-            set
-            {
-            }
+            aMenuManager = new MenuManager();
         }
 
         protected override void Initialize()
@@ -135,9 +129,31 @@ namespace Pac_Man_DesignPatterns.Game
             aGraphics.PreferredBackBufferHeight = 850;
             aGraphics.ApplyChanges();
 
-            InitTexturesDictionary();
 
-            aLevelBuilder.InitTextures(Content, GraphicsDevice, aDictionaryTexturePaths[TexturesEnum.GHOST_HOUSE], aDictionaryTexturePaths[TexturesEnum.COOKIE], aDictionaryTexturePaths[TexturesEnum.POWERCOOKIE], aDictionaryTexturePaths[TexturesEnum.WALL]);
+            InitMenu();
+
+            InitGame();
+
+            base.Initialize();
+        }
+
+
+        public void InitGame()
+        {
+            InitTexturesArray();
+
+            RestartGame();
+        }
+
+        public void InitMenu()
+        {
+            aMenuManager.CreateMenu(aGraphics.GraphicsDevice);
+        }
+
+        public void RestartGame()
+        {
+            aLevelDirector.InitLists();
+            aLevelBuilder.InitTextures(Content, GraphicsDevice, aArrayTexturePaths[(int)TexturesEnum.GhostHouse], aArrayTexturePaths[(int)TexturesEnum.Cookie], aArrayTexturePaths[(int)TexturesEnum.PowerCookie], aArrayTexturePaths[(int)TexturesEnum.Wall]);
             aLevelDirector.ConvertLevelFromPathToBlueprint("Content\\assets\\levels\\level1.txt", aLevelDirector.TilesScale);
             aLevelMaze = aLevelDirector.CreateLevel();
 
@@ -150,17 +166,16 @@ namespace Pac_Man_DesignPatterns.Game
             aGhostHouse = (GhostHouse)aLevelMaze.GetGhostHouse()[0];
             aScatterPoints = aLevelMaze.GetGhostScatterPoints();
 
-            Vector2 tmpSpawnPointTemp = new Vector2(aGhostHouse.Position.X, aGhostHouse.Position.Y);
-
             aPathFindingManager = new PathFindingManager(28, 31, aLevelMaze.GetWalls(), aLevelDirector.TilesScale);
             aCollisionDetector = new CollisionDetector(aLevelMaze.GetAllEntities());
 
             Vector2 tmpGhostHouseTargetPos = new Vector2(aGhostHouse.Position.X, aGhostHouse.Position.Y + aLevelDirector.TilesScale);
+            Vector2 tmpSpawnPointTemp = new Vector2(aGhostHouse.Position.X, aGhostHouse.Position.Y);
 
-            aEntityArray[1] = aRedGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
-            aEntityArray[2] = aPinkGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
-            aEntityArray[3] = aCyanGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
-            aEntityArray[4] = aOrangeGhostFactory.CreateGhost(aDictionaryTexturePaths[TexturesEnum.GHOST_GENERAL], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aDictionaryTexturePaths[TexturesEnum.GHOST_FRIGHTENED], aDictionaryTexturePaths[TexturesEnum.GHOST_DEAD]);
+            aEntityArray[1] = aRedGhostFactory.CreateGhost(aArrayTexturePaths[(int)TexturesEnum.GhostGeneral], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aArrayTexturePaths[(int)TexturesEnum.GhostFrightened], aArrayTexturePaths[(int)TexturesEnum.GhostDead]);
+            aEntityArray[2] = aPinkGhostFactory.CreateGhost(aArrayTexturePaths[(int)TexturesEnum.GhostGeneral], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aArrayTexturePaths[(int)TexturesEnum.GhostFrightened], aArrayTexturePaths[(int)TexturesEnum.GhostDead]);
+            aEntityArray[3] = aCyanGhostFactory.CreateGhost(aArrayTexturePaths[(int)TexturesEnum.GhostGeneral], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aArrayTexturePaths[(int)TexturesEnum.GhostFrightened], aArrayTexturePaths[(int)TexturesEnum.GhostDead]);
+            aEntityArray[4] = aOrangeGhostFactory.CreateGhost(aArrayTexturePaths[(int)TexturesEnum.GhostGeneral], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y + aLevelDirector.TilesScale, aLevelDirector.TilesScale, tmpGhostHouseTargetPos, aCollisionDetector, aArrayTexturePaths[(int)TexturesEnum.GhostFrightened], aArrayTexturePaths[(int)TexturesEnum.GhostDead]);
 
             List<Entity> tmpListAll = aLevelMaze.GetAllEntities().ToList();
             tmpListAll.Add(aEntityArray[1]);
@@ -170,40 +185,38 @@ namespace Pac_Man_DesignPatterns.Game
 
             aCollisionDetectorWithGhosts = new CollisionDetector(tmpListAll);
 
-            aPacMan = new PacMan(aDictionaryTexturePaths[TexturesEnum.PACMAN], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y - aLevelDirector.TilesScale, aLevelDirector.TilesScale, aCollisionDetectorWithGhosts, Color.White);
+            aPacMan = new PacMan(aArrayTexturePaths[(int)TexturesEnum.PacMan], (int)tmpSpawnPointTemp.X, (int)tmpSpawnPointTemp.Y - aLevelDirector.TilesScale, aLevelDirector.TilesScale, aCollisionDetectorWithGhosts, Color.White);
 
             aEntityArray[0] = aPacMan;
 
-            aUIManager = new UIManager(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, aYOffset), aLevelDirector.TilesScale, GraphicsDevice);
+            aUIManager = new UIManager(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, aYOffset), GraphicsDevice);
 
-            MenuItem test1 = new PlayButton("Play");
-            MenuItem test2 = new QuitButton("Quit");
-            aMenuDelete = new Menu.Menu(GraphicsDevice, Color.Purple, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight, new MenuItem[] { test1, test2 });
+            for (int i = 0; i < aEntityArray.Length; i++)
+            {
+                (aEntityArray[i] as MovableEntity)?.ReSpawn();
+            }
 
-            base.Initialize();
+            LoadContent();
         }
 
-        private void InitTexturesDictionary()
+        private void InitTexturesArray()
         {
-            aDictionaryTexturePaths.Add(TexturesEnum.PACMAN, "assets\\entitites\\pacman\\pacman");
-            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_GENERAL, "assets\\entitites\\ghost");
-            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_FRIGHTENED, "assets\\entitites\\ghost_frightened");
-            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_DEAD, "assets\\entitites\\ghost_dead");
-            aDictionaryTexturePaths.Add(TexturesEnum.WALL, "assets\\entitites\\wall");
-            aDictionaryTexturePaths.Add(TexturesEnum.GHOST_HOUSE, "assets\\entitites\\ghost_house");
-            aDictionaryTexturePaths.Add(TexturesEnum.COOKIE, "assets\\entitites\\cookie");
-            aDictionaryTexturePaths.Add(TexturesEnum.POWERCOOKIE, "assets\\entitites\\power_cookie");
-            aDictionaryTexturePaths.Add(TexturesEnum.FOOD, "assets\\entitites\\cookie");
+            aArrayTexturePaths[(int)TexturesEnum.PacMan] = "assets\\entitites\\pacman\\pacman";
+            aArrayTexturePaths[(int)TexturesEnum.GhostGeneral] = "assets\\entitites\\ghost";
+            aArrayTexturePaths[(int)TexturesEnum.GhostFrightened] = "assets\\entitites\\ghost_frightened";
+            aArrayTexturePaths[(int)TexturesEnum.GhostDead] = "assets\\entitites\\ghost_dead";
+            aArrayTexturePaths[(int)TexturesEnum.Wall] = "assets\\entitites\\wall";
+            aArrayTexturePaths[(int)TexturesEnum.GhostHouse] = "assets\\entitites\\ghost_house";
+            aArrayTexturePaths[(int)TexturesEnum.Cookie] = "assets\\entitites\\cookie";
+            aArrayTexturePaths[(int)TexturesEnum.PowerCookie] = "assets\\entitites\\power_cookie";
+            aArrayTexturePaths[(int)TexturesEnum.Food] = "assets\\entitites\\cookie";
         }
 
         protected override void LoadContent()
         {
-
             aSpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
-
-            aDebugWallTexture = Content.Load<Texture2D>(aDictionaryTexturePaths[TexturesEnum.WALL]);
+            aDebugWallTexture = Content.Load<Texture2D>(aArrayTexturePaths[(int)TexturesEnum.Wall]);
 
             foreach (var itemMazeEntity in aLevelMaze.GetAllEntities())
             {
@@ -217,125 +230,140 @@ namespace Pac_Man_DesignPatterns.Game
 
             aUIManager.LoadContent(Content);
 
-            aPacMan.RegisterObserver(aUIManager);
             aPacMan.RegisterObserver(this);
 
-            aMenuDelete.Load(Content);
+            aMenuManager.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime parGameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
-            aSpriteBatch.Begin();
-
-            aTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (aTimer > 0.1)
+            if (aEnumGameState == GameState.Menu)
             {
-                foreach (Entity tmpEntity in aEntityArray)
+                aMenuManager.Update();
+                return;
+            }
+
+            if (aEnumGameState == GameState.Playing)
+            {
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    aEnumGameState = GameState.Menu;
+
+                if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed || aKeyHandler.GetKeyInputPressed(Keys.P))
+                    aDrawDebugPath = !aDrawDebugPath;
+
+                aTimer += (float)parGameTime.ElapsedGameTime.TotalSeconds;
+
+                if (aTimer > 0.1)
                 {
-                    if (tmpEntity is Ghost tmpGhost)
+                    foreach (Entity tmpEntity in aEntityArray)
                     {
-                        int[] tmpTargetPath = aPathFindingManager.GetShortestPath(tmpGhost.GetTargetPosition(), new DjkistraPathFind());
-
-                        if (tmpTargetPath is not null)
+                        if (tmpEntity is Ghost tmpGhost)
                         {
-                            var tmpConstructedPath = aPathFindingManager.ConstructPath(tmpGhost.Position, tmpTargetPath);
+                            int[] tmpTargetPath = aPathFindingManager.GetShortestPath(tmpGhost.GetTargetPosition(), new DjkistraPathFind());
 
-                            tmpGhost.SetPath(aPathFindingManager.ConvertTargetIdsToVectorArray(tmpConstructedPath));
+                            if (tmpTargetPath is not null)
+                            {
+                                var tmpConstructedPath = aPathFindingManager.ConstructPath(tmpGhost.Position, tmpTargetPath);
+
+                                tmpGhost.SetPath(aPathFindingManager.ConvertTargetIdsToVectorArray(tmpConstructedPath));
+                            }
+                        }
+                    }
+
+                    aTimer = 0;
+                }
+
+                foreach (Entity entity in aEntityArray)
+                {
+                    if (entity is MovableEntity)
+                    {
+                        if (entity is Ghost ghost)
+
+                        {
+                            ghost.PursuitTarget();
                         }
                     }
                 }
 
-                aTimer = 0;
+                ControlEntityMovement(parGameTime: parGameTime);
+                return;
             }
 
-            foreach (Entity entity in aEntityArray)
-            {
-                if (entity is MovableEntity)
-                {
-                    if (entity is Ghost ghost)
-
-                    {
-                        ghost.PursuitTarget();
-                    }
-                }
-            }
-
-            ControlEntityMovement(parGameTime: gameTime);
-
-            aMenuDelete.Update();
-
-            aSpriteBatch.End();
 
             // TODO: Add your update logic here
 
-            base.Update(gameTime);
+            base.Update(parGameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime parGameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-            aSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null);
+            aSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp);
 
-           
-
-            aUIManager.Draw(aSpriteBatch);
-
-            foreach (var itemMaze in aLevelMaze.GetWalls())
+            if (aEnumGameState == GameState.Menu)
             {
-                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
-
+                aMenuManager.Draw(aSpriteBatch);
+                aSpriteBatch.End();
+                return;
             }
-            foreach (var itemMaze in aLevelMaze.GetFood())
+
+            if (aEnumGameState == GameState.Playing)
             {
-                if (!((TileEntity)itemMaze).IsHidden)
+                aUIManager.Draw(aSpriteBatch);
+
+                foreach (var itemMaze in aLevelMaze.GetWalls())
+                {
+                    itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
+
+                }
+                foreach (var itemMaze in aLevelMaze.GetFood())
+                {
+                    if (!((TileEntity)itemMaze).IsHidden)
+                    {
+                        itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
+                    }
+                }
+
+                foreach (var itemMaze in aLevelMaze.GetGhostHouse())
                 {
                     itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
                 }
-            }
-            foreach (var itemMaze in aLevelMaze.GetOtherObjects())
-            {
-                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
-            }
 
-            foreach (var itemMaze in aLevelMaze.GetGhostHouse())
-            {
-                itemMaze.Draw(aSpriteBatch, aXOffset, aYOffset);
-            }
+                int tmpIndex = 0;
 
-            int tmpIndex = 0;
-
-            foreach (Entity entity in aEntityArray)
-            {
-
-                if (entity is not null)
+                foreach (Entity entity in aEntityArray)
                 {
-                    entity.Draw(aSpriteBatch, aXOffset, aYOffset);
 
-
-                    if (entity is Ghost tmpGhost)
+                    if (entity is not null)
                     {
-                        DrawDebugPath(tmpGhost, tmpIndex);
+                        entity.Draw(aSpriteBatch, aXOffset, aYOffset);
+
+
+                        if (aDrawDebugPath)
+                        {
+                            if (entity is Ghost tmpGhost)
+                            {
+                                DrawDebugPath(tmpGhost, tmpIndex);
+                            }
+                        }
+
+                        tmpIndex++;
+
                     }
-
-                    tmpIndex++;
-
                 }
+                aSpriteBatch.End();
+                return;
             }
-
-            aMenuDelete.Draw(aSpriteBatch);
 
             aSpriteBatch.End();
 
             // TODO: Add your drawing code here
 
-            base.Draw(gameTime);
+            base.Draw(parGameTime);
         }
 
         private void ControlEntityMovement(GameTime parGameTime)

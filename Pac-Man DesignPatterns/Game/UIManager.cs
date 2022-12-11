@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
-using Pac_Man_DesignPatterns.State.Ghost;
-using Pac_Man_DesignPatterns.Utils;
+
+// ReSharper disable StringLiteralTypo
 
 namespace Pac_Man_DesignPatterns.Game
 {
     // ReSharper disable once InconsistentNaming
-    public class UIManager : IObserver
+    public class UIManager
     {
 
 
 
         private int aScore;
         private readonly int aLevel;
-        private readonly int aLives;
+        private int aLives;
 
         private readonly Vector2 aSizeVector;
         private readonly Texture2D aBackgroundTexture;
@@ -32,7 +25,7 @@ namespace Pac_Man_DesignPatterns.Game
         private readonly float aGridSize;
 
 
-        public UIManager(Vector2 parVectorSize, int parSize, GraphicsDevice parGraphicsDevice)
+        public UIManager(Vector2 parVectorSize, GraphicsDevice parGraphicsDevice)
         {
             aLevel = 1;
             aScore = 0;
@@ -44,23 +37,6 @@ namespace Pac_Man_DesignPatterns.Game
             aGridSize = parVectorSize.X / 4;
         }
 
-        public int GetYOffset()
-        {
-            return 0;
-        }
-
-        public Utils.IObserver Implementation
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public void UpdateEntityCollision()
-        {
-            throw new NotImplementedException();
-        }
 
         public void LoadContent(ContentManager parContentManager)
         {
@@ -100,42 +76,21 @@ namespace Pac_Man_DesignPatterns.Game
             
         }
 
-        private float GetCenteredStringOffset(SpriteFont parSpriteFont, float tmpSizeOfCell, string parText)
+        private float GetCenteredStringOffset(SpriteFont parSpriteFont, float parTmpSizeOfCell, string parText)
         {
             float tmpStringWidth = parSpriteFont.MeasureString(parText).X;
-            return (tmpSizeOfCell - tmpStringWidth) / 2;
+            return (parTmpSizeOfCell - tmpStringWidth) / 2;
         }
 
-        public void Update(Message parMessage)
+        public void AddScore(int parScore)
         {
-            switch (parMessage.MessageCode)
-            {
-                case MessageCodes.CookieEaten:
-
-                    if (parMessage.ACommand is PowerCookie)
-                    {
-                        aScore += 10;
-                        break;
-                    }
-
-                    aScore++;
-                    break;
-                case MessageCodes.GhostCollision:
-                {
-                    if (parMessage.ACommand is Ghost)
-                    {
-                        if (((Ghost)(parMessage.ACommand)).GhostState is GhostFrightenedState)
-                        {
-                            aScore += 20;
-                        }
-                    }
-
-                    break;
-                }
-
-                default:
-                    break;
-            }
+            aScore += parScore;
         }
+
+        public void TakeLives(int parNumberOfLives)
+        {
+            aLives -= parNumberOfLives;
+        }
+
     }
 }

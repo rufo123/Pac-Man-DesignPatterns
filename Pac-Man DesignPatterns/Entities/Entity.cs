@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts;
 using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Entities
@@ -26,10 +21,11 @@ namespace Pac_Man_DesignPatterns.Entities
 
         private readonly string aTexturePath;
 
-        public int Size
-        {
-            get => aSize;
-        }
+        protected bool aIsHidden;
+
+        public int Size => aSize;
+
+        public bool IsHidden => aIsHidden;
 
         protected Entity(string parTexturePath, int parPositionX, int parPositionY, int parSize, Color parColor, int parRotation = 0)
         {
@@ -47,6 +43,8 @@ namespace Pac_Man_DesignPatterns.Entities
 
             aRotation = parRotation;
 
+            aIsHidden = false;
+
         }
 
         protected Entity(Texture2D parTexture, int parPositionX, int parPositionY, int parSize, Color parColor, int parRotation = 0)
@@ -61,14 +59,8 @@ namespace Pac_Man_DesignPatterns.Entities
 
             aRotation = parRotation;
 
-        }
+            aIsHidden = false;
 
-        public Game.Game Agregation
-        {
-            get => default;
-            set
-            {
-            }
         }
 
         public Vector2 Position
@@ -77,10 +69,6 @@ namespace Pac_Man_DesignPatterns.Entities
             set => aPosition = value;
         }
 
-        public int Rotation
-        {
-            get => aRotation;
-        }
 
         public Rectangle GetRectangleHitBox()
         {
@@ -99,18 +87,18 @@ namespace Pac_Man_DesignPatterns.Entities
         {
             if (aTexturePath is null && aTexture is null)
             {
-                this.aTexture = null;
+                aTexture = null;
                 return;
             }
 
             if (aTexturePath != string.Empty && aTexture is null)
             {
-                this.aTexture = parContent.Load<Texture2D>(aTexturePath);
+                aTexture = parContent.Load<Texture2D>(aTexturePath);
             }
 
             if (aColorToReplace != Color.White && aColor != Color.White)
             {
-                this.ChangeColor(aColorToReplace, aColor);
+                ChangeColor(aColorToReplace, aColor);
             }
 
 
@@ -120,6 +108,7 @@ namespace Pac_Man_DesignPatterns.Entities
         {
         }
 
+        [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         public virtual void Draw(SpriteBatch parSpriteBatch, float parXOffset = 0, float parYOffset = 0, int parColor = -1)
         {
             Color tmpColor = Color.White;
@@ -138,12 +127,13 @@ namespace Pac_Man_DesignPatterns.Entities
                 case 3:
                     tmpColor = Color.Green;
                     break;
-                default:
-                    break;
             }
 
-            Vector2 originOffset = new Vector2(GetTexture().Width / 2, GetTexture().Height / 2);
-            parSpriteBatch.Draw(GetTexture(), AddOffSetToRectangle(GetRectangleHitBox(), parXOffset, parYOffset), new Rectangle(0, 0, aTexture.Height, aTexture.Height), tmpColor, MathHelper.ToRadians(GetRotation()), originOffset, GetSpriteEffects(), 0);
+            if (!IsHidden)
+            {
+                Vector2 originOffset = new Vector2(GetTexture().Width / 2, GetTexture().Height / 2);
+                parSpriteBatch.Draw(GetTexture(), AddOffSetToRectangle(GetRectangleHitBox(), parXOffset, parYOffset), new Rectangle(0, 0, aTexture.Height, aTexture.Height), tmpColor, MathHelper.ToRadians(GetRotation()), originOffset, GetSpriteEffects(), 0);
+            }
         }
 
 
@@ -168,6 +158,7 @@ namespace Pac_Man_DesignPatterns.Entities
             {
                 Color[] tmpColorArray = new Color[aTexture.Width * aTexture.Height];
 
+                // ReSharper disable once RedundantTypeArgumentsOfMethod
                 aTexture.GetData<Color>(tmpColorArray);
 
                 for (int i = 0; i < tmpColorArray.Length; i++)
@@ -178,7 +169,7 @@ namespace Pac_Man_DesignPatterns.Entities
                     }
                 }
 
-                Texture2D tmpCopyTexture = new Texture2D(GameManager.GetInstance().Game.GraphicsDevice, aTexture.Width, aTexture.Height);
+                Texture2D tmpCopyTexture = new Texture2D(GameManager.GetInstance().GetGraphicDevice(), aTexture.Width, aTexture.Height);
                 tmpCopyTexture.SetData(tmpColorArray);
 
                 aTexture = tmpCopyTexture;

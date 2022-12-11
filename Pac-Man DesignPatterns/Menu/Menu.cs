@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pac_Man_DesignPatterns.Game;
-using Pac_Man_DesignPatterns.Utils;
+
+// ReSharper disable StringLiteralTypo
 
 namespace Pac_Man_DesignPatterns.Menu
 {
     public class Menu
     {
-        private Color aColor;
-        private int aWidth;
-        private int aHeight;
-        private MenuItem[] aArrayMenuItems;
-        private Texture2D aBackgroundTexture;
-        private Texture2D aButtonTexture;
+        private readonly Color aColor;
+        private readonly int aWidth;
+        private readonly int aHeight;
+        private readonly MenuItem[] aArrayMenuItems;
+        private readonly Texture2D aBackgroundTexture;
+        private readonly Texture2D aButtonTexture;
         private SpriteFont aFont;
 
         private KeyboardState aKeyBoardNew;
@@ -28,14 +24,14 @@ namespace Pac_Man_DesignPatterns.Menu
 
         private int aSelectedIndex;
 
-        public Menu(GraphicsDevice parGraphicsDevice, Color parBackgroundColor, int parWidth, int parHeight, MenuItem[] parMenuItems)
+        public Menu(Color parBackgroundColor, int parWidth, int parHeight, MenuItem[] parMenuItems)
         {
             aColor = parBackgroundColor;
             aWidth = parWidth;
             aHeight = parHeight;
             aArrayMenuItems = parMenuItems;
-            aBackgroundTexture = new Texture2D(GameManager.GetInstance().Game.GraphicsDevice, 1, 1);
-            aButtonTexture = new Texture2D(GameManager.GetInstance().Game.GraphicsDevice, 1, 1);
+            aBackgroundTexture = new Texture2D(GameManager.GetInstance().GetGraphicDevice(), 1, 1);
+            aButtonTexture = new Texture2D(GameManager.GetInstance().GetGraphicDevice(), 1, 1);
             var test = new List<MenuItem>(parMenuItems);
             aArrayMenuItems = test.ToArray();
 
@@ -47,7 +43,7 @@ namespace Pac_Man_DesignPatterns.Menu
 
             parSpriteBatch.Draw(aBackgroundTexture, new Rectangle(0, 0, aWidth, aHeight), aColor);
 
-            GameManager.GetInstance().Game.GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+            GameManager.GetInstance().GetGraphicDeviceSamplerState(SamplerState.AnisotropicWrap);
 
             int tmpWidth = aWidth / aArrayMenuItems.Length;
             int tmpHeight = aHeight / aArrayMenuItems.Length;
@@ -76,20 +72,15 @@ namespace Pac_Man_DesignPatterns.Menu
                 parSpriteBatch.DrawString(aFont, aArrayMenuItems[i].Text, new Vector2((tmpLeftPos + tmpWidth / 2) - tmpFontSizeVector.X, (tmpTopPos + (tmpHeight / aArrayMenuItems.Length) / 2) - tmpFontSizeVector.Y), Color.Black, 0, Vector2.Zero, tmpFontScale, SpriteEffects.None, 0);
             }
 
-            GameManager.GetInstance().Game.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+            GameManager.GetInstance().GetGraphicDeviceSamplerState(SamplerState.LinearClamp);
 
         }
 
-        public void Load(ContentManager parContentManager)
+        public void LoadContent(ContentManager parContentManager)
         {
             aFont = parContentManager.Load<SpriteFont>("assets\\fonts\\font_bigger");
             aBackgroundTexture.SetData(new[] { aColor });
             aButtonTexture.SetData(new[] { Color.Cyan });
-        }
-
-        public void Initialise()
-        {
-
         }
 
         public void Update()

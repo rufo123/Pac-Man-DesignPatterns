@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pac_Man_DesignPatterns.Command;
-using Pac_Man_DesignPatterns.Game;
+﻿using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Menu
 {
@@ -16,7 +10,7 @@ namespace Pac_Man_DesignPatterns.Menu
 
         public override void Execute()
         {
-            GameManager.GetInstance().Game.Exit();
+            GameManager.GetInstance().ExitGame();
         }
     }
 }

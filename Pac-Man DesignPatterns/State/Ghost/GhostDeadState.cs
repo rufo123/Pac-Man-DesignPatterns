@@ -27,7 +27,7 @@ namespace Pac_Man_DesignPatterns.State.Ghost
 
         public GhostDeadState(Entities.MovableEntity.Ghosts.Ghost parGhost, Vector2 parGhostHousePos, string parAlternativeTexturePath) : base(parGhost)
         {
-            this.aGhostHousePos = parGhostHousePos;
+            aGhostHousePos = parGhostHousePos;
             aAlternativeTexturePath = parAlternativeTexturePath;
 
         }
@@ -35,7 +35,7 @@ namespace Pac_Man_DesignPatterns.State.Ghost
         public override void Update(GameTime parGameTime)
         {
 
-            if (Ghost.GetRectangleHitBox().Intersects(new Rectangle((int)this.aGhostHousePos.X, (int)this.aGhostHousePos.Y, (int)this.aGhostHousePos.X * Ghost.Size, (int)this.aGhostHousePos.Y * Ghost.Size)))
+            if (Ghost.GetRectangleHitBox().Intersects(new Rectangle((int)aGhostHousePos.X, (int)aGhostHousePos.Y, (int)aGhostHousePos.X * Ghost.Size, (int)aGhostHousePos.Y * Ghost.Size)))
             {
                 aReachedHome = true;
                 Timer = TimerThreshold;

@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// ReSharper disable UnusedMember.Global
 namespace Pac_Man_DesignPatterns.Utils
 {
     public enum TexturesEnum
     {
-        GHOST_RED = 0,
-        GHOST_ORANGE = 1,
-        GHOST_PINK = 2,
-        GHOST_CYAN = 3,
-        PACMAN = 4,
-        WALL = 5,
-        COOKIE = 6,
-        POWERCOOKIE = 7,
-        GHOST_HOUSE = 8,
-        GHOST_DEAD = 9,
-        GHOST_FRIGHTENED = 10,
-        GHOST_GENERAL = 11,
-        FOOD = 12,
+        GhostRed = 0,
+        GhostOrange = 1,
+        GhostPink = 2,
+        GhostCyan = 3,
+        PacMan = 4,
+        Wall = 5,
+        Cookie = 6,
+        PowerCookie = 7,
+        GhostHouse = 8,
+        GhostDead = 9,
+        GhostFrightened = 10,
+        GhostGeneral = 11,
+        Food = 12,
     }
 }

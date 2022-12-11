@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Game;
 
 namespace Pac_Man_DesignPatterns.Entities.TileEntity
@@ -25,6 +18,8 @@ namespace Pac_Man_DesignPatterns.Entities.TileEntity
             aIsHidden = true;
             
             aGameManager.SetGhostsFrightened();
+
+            aGameManager.AddScore(10);
         }
     }
 }

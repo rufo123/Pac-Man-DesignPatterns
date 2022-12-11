@@ -1,19 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Strategy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pac_Man_DesignPatterns.Command;
-using Pac_Man_DesignPatterns.Game;
-using Pac_Man_DesignPatterns.Utils;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
-using Pac_Man_DesignPatterns.State;
-using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Pac_Man_DesignPatterns.Command;
+using Pac_Man_DesignPatterns.Entities.TileEntity;
+using Pac_Man_DesignPatterns.Game;
 using Pac_Man_DesignPatterns.State.Ghost;
+using Pac_Man_DesignPatterns.State.PacMan;
+using Pac_Man_DesignPatterns.Strategy;
+using Pac_Man_DesignPatterns.Utils;
 
 namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
 {
@@ -43,14 +40,12 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
 
         private Vector2 aTarget;
 
-        private Vector2 aTargetSource;
-
         // Stack na Path.
 
         public IGhostStrategy GhostStrategy => aGhostStrategy;
 
 
-        protected Ghost(string parTexturePath, int parPositionX, int parPositionY, int parSize, Utilities parUtilities, Vector2 parGhostHousePos, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize,  false, parColor)
+        protected Ghost(string parTexturePath, int parPositionX, int parPositionY, int parSize, Vector2 parGhostHousePos, IGhostStrategy parGhostStrategy, CollisionDetector parCollisionDetector, string parFrightenedTexturePath, string parDeadTexturePath, Color parColor) : base(parTexturePath, parPositionX, parPositionY, parSize,  false, parColor)
         {
             aGhostHousePos = parGhostHousePos;
             aGhostStrategy = parGhostStrategy;
@@ -61,7 +56,6 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
             aGameManager = GameManager.GetInstance();
             aTarget = Position;
             aStackPath = new Stack<Vector2>();
-            aTargetSource = Position;
             aColorToReplace = new Color(134, 134, 134);
         }
 
@@ -113,15 +107,7 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
             base.LoadContent(parContent);
         }
 
-        public Vector2 GetTargetSourcePosition()
-        {
-            return aTargetSource;
-        }
 
-        public void SetTargetSourcePosition(Vector2 parTargetSourcePosition)
-        {
-            aTargetSource = parTargetSourcePosition;
-        }
 
 
         public Vector2 GetTargetPosition()
@@ -132,9 +118,9 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
         public void PursuitTarget()
         {
 
-            Vector2 parTaget = aTarget;
+            Vector2 tmpTarget = aTarget;
 
-            if (Vector2.Distance(parTaget, Position) <  1)
+            if (Vector2.Distance(tmpTarget, Position) <  1)
             {
                 bool tmpCanBePopped = aStackPath.TryPop(out Vector2 tmpNewTarget);
 
@@ -143,46 +129,35 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
                     aTarget = tmpNewTarget;
                 }
             }
-
-        /*    if (GetRectangleHitBox().Intersects(new Rectangle((int)aTarget.X, (int)aTarget.Y, (int)aTarget.X * Size,
-                    (int)aTarget.Y * Size)))
-            {
-                bool tmpCanBePopped = aStackPath.TryPop(out Vector2 tmpNewTarget);
-
-                if (tmpCanBePopped)
-                {
-                    aTarget = tmpNewTarget;
-                }
-            } */
 
             int tmpRoundedTargetX = (int)Position.X - ((int)Position.X % Size);
             int tmpRoundedTargetY = (int)Position.Y - ((int)Position.Y % Size);
 
             if (aTarget.X == tmpRoundedTargetX)
             {
-                if ((int)tmpRoundedTargetY < aTarget.Y)
+                if (tmpRoundedTargetY < aTarget.Y)
                 {
-                    ChangeDirection(Utils.Direction.DOWN);
+                    ChangeDirection(Direction.Down);
                 }
-                else if ((int)tmpRoundedTargetY == aTarget.Y)
+                else if (tmpRoundedTargetY == aTarget.Y)
                 {
                    // ChangeDirection(Utils.Direction.NOTHING);
                 }
                 else {
-                    ChangeDirection(Utils.Direction.UP);
+                    ChangeDirection(Direction.Up);
                 }
             }
             else if (aTarget.Y == tmpRoundedTargetY) {
-                if ((int)tmpRoundedTargetX < aTarget.X)
+                if (tmpRoundedTargetX < aTarget.X)
                 {
-                    ChangeDirection(Utils.Direction.RIGHT);
+                    ChangeDirection(Direction.Right);
                 }
-                else if ((int)tmpRoundedTargetX == aTarget.X)
+                else if (tmpRoundedTargetX == aTarget.X)
                 {
                   //  ChangeDirection(Utils.Direction.NOTHING);
                 }
                 else {
-                    ChangeDirection(Utils.Direction.LEFT);
+                    ChangeDirection(Direction.Left);
                 }
             }
 
@@ -193,14 +168,14 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
         public override void Update(GameTime parGameTime)
         {
 
-            if (this.EnqueuedDirection != Direction.NOTHING)
+            if (EnqueuedDirection != Direction.Nothing)
             {
 
-                bool tmpCollided = aCollisionDetector.DetectCollision(this.PredictRectangleNextPos(parGameTime, this.EnqueuedDirection), out Entity[] tmpEntityCollidedWith);
+                bool tmpCollided = aCollisionDetector.DetectCollision(PredictRectangleNextPos(parGameTime, EnqueuedDirection), out Entity[] tmpEntityCollidedWith);
 
                 if (!tmpCollided || tmpEntityCollidedWith is null)
                 {
-                    this.ChangeEnqueuedDirectionToDirection();
+                    ChangeEnqueuedDirectionToDirection();
                 }
 
                 if (tmpEntityCollidedWith is not null)
@@ -217,13 +192,13 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
 
                     if (!tmpShouldBeStopped)
                     {
-                        this.ChangeEnqueuedDirectionToDirection();
+                        ChangeEnqueuedDirectionToDirection();
                     }
                 }
 
             }
 
-            aCollisionDetector.DetectCollision(this.PredictRectangleNextPos(parGameTime, this.Direction), out Entity[] tmpEntityCollidedWithNext);
+            aCollisionDetector.DetectCollision(PredictRectangleNextPos(parGameTime, Direction), out Entity[] tmpEntityCollidedWithNext);
 
 
             if (tmpEntityCollidedWithNext is not null)
@@ -238,25 +213,18 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
                     }
                 }
 
-                if (tmpShouldBeStopped)
-                {
-                    this.IsBlocked = true;
-                }
-                else
-                {
-                    this.IsBlocked = false;
-                }
+                IsBlocked = tmpShouldBeStopped;
             }
             else
             {
-                this.IsBlocked = false;
+                IsBlocked = false;
             }
 
 
             aGhostState.Update(parGameTime);
             Move(parGameTime);
 
-            aCollisionDetector.EdgeTeleporter((int)GameManager.GetInstance().Game.GetMazeWidth().X, (int)GameManager.GetInstance().Game.GetMazeWidth().Y, this);
+            aCollisionDetector.EdgeTeleporter((int)GameManager.GetInstance().GetMazeWidth().X, (int)GameManager.GetInstance().GetMazeWidth().Y, this);
 
             base.Update(parGameTime);
         }
@@ -267,10 +235,13 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
             if (aGhostState == aFrightenedState)
             {
                 ChangeState(GhostStateEnum.Dead);
-               
-            } else if (aGhostState != aDeadState)
+                GameManager.GetInstance().AddScore(20);
+
+            } else if (aGhostState != aDeadState && aGameManager.GetPacManState() == PacManStateEnum.Alive)
             {
-                aGameManager.ReSpawnPacMan();
+                aGameManager.KillPacMan();
+                GameManager.GetInstance().TakeLives(1);
+                ChangeState(GhostStateEnum.Scatter);
             }
         }
 
@@ -301,6 +272,12 @@ namespace Pac_Man_DesignPatterns.Entities.MovableEntity.Ghosts
         public override float GetSpeed()
         {
             return aGhostState.GetSpeed();
+        }
+
+        public override void ReSpawn()
+        {
+            aGhostState = aHomeState;
+            base.ReSpawn();
         }
     }
 }

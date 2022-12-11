@@ -1,13 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Pac_Man_DesignPatterns.Entities;
-using Pac_Man_DesignPatterns.Entities.TileEntity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
-using Pac_Man_DesignPatterns.Entities.MovableEntity;
 
 namespace Pac_Man_DesignPatterns.Game
 {
@@ -17,24 +10,12 @@ namespace Pac_Man_DesignPatterns.Game
 
         public CollisionDetector(Entity[] parGameEntitiesArray)
         {
-            this.aGameEntitiesArray = parGameEntitiesArray;
+            aGameEntitiesArray = parGameEntitiesArray;
         }
 
         public CollisionDetector(List<Entity> parGameEntitiesList)
         {
-            this.aGameEntitiesArray = parGameEntitiesList.ToArray();
-        }
-
-        public bool DetectCollision(Entity parEntity)
-        {
-            foreach (var itemEntity in this.aGameEntitiesArray)
-            {
-                if (itemEntity.GetRectangleHitBox().Intersects(parEntity.GetRectangleHitBox())) {
-                    return true;
-                }
-            }
-
-            return false;
+            aGameEntitiesArray = parGameEntitiesList.ToArray();
         }
 
         public bool DetectCollision(Rectangle parRectangle, out Entity[] parOutCollidedWithEntity)
@@ -43,10 +24,8 @@ namespace Pac_Man_DesignPatterns.Game
             parOutCollidedWithEntity = null;
             List<Entity> tmpListCollidedWithEntities = new List<Entity>();
 
-            int tmpIndex = 0;
-            foreach (var itemEntity in this.aGameEntitiesArray)
+            foreach (var itemEntity in aGameEntitiesArray)
             {
-                tmpIndex++;
                 if (itemEntity.GetRectangleHitBox().Intersects(parRectangle))
                 {
                     tmpCollidedWithEntity = true;
